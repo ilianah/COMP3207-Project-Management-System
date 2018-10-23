@@ -1,14 +1,25 @@
 'use strict';
+let AWS = require('aws-sdk');
+let documentClient = new AWS.DynamoDB.DocumentClient();
 
 module.exports.handler = async (event, context) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Go Serverless v1.0! Your function executed successfully!',
-      input: event,
-    }),
+  let params = {
+    TableName: 'projects',
+    Key: {
+      id: event.pathParameters.id
+    }
   };
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
+  try {
+    let res = await documentClient.delete(params).promise();
+    return {
+      body: JSON.stringify(res),
+      statusCode: 200
+    };
+  } catch (e) {
+    return {
+      body: JSON.stringify(e),
+      statusCode: 500
+    }
+  }
 };
