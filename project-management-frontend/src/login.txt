@@ -1,0 +1,1 @@
+https://projectmanagement.auth.us-east-1.amazoncognito.com/login?response_type=token&client_id=2pk41ten9ocjpluelle01hiral&redirect_uri=https%3A%2F%2Fgoogle.com
