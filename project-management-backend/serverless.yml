@@ -55,15 +55,24 @@ functions:
   listprojects:
     handler: listprojects.handler
     events:
-      - http: GET projects
+      - http: 
+          method: GET
+          path: projects
+          cors: true
+          authorizer:
+            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
   createproject:
     handler: createproject.handler
     events:
-      - http: POST projects
+      - http: 
+          method: POST
+          path: projects
+          cors: true
   deleteproject:
     handler: deleteproject.handler
     events:
       - http: 
+          cors: true
           path: projects/{id}
           method: DELETE
           request:
@@ -74,6 +83,7 @@ functions:
     handler: updateproject.handler
     events:
       - http: 
+          cors: true
           path: projects/{id}
           method: PUT
           request:
