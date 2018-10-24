@@ -1,25 +1,33 @@
 'use strict';
 let AWS = require('aws-sdk');
 let documentClient = new AWS.DynamoDB.DocumentClient();
+let { respondWithHeaders, hasRole, permissionError } = require('./util/helpers');
 
-module.exports.handler = async (event, context) => {
-  let params = {
-    TableName: 'projects',
-    Key: {
-      id: event.pathParameters.id
-    }
-  };
-
+module.exports.handler = async event => {
+  if (!hasRole(event, 'Admin') && !hasRole(event, 'ProjectManager'))
+    return permissionError();
   try {
-    let res = await documentClient.delete(params).promise();
-    return {
-      body: JSON.stringify(res),
-      statusCode: 200
+    let params = {
+      TableName: 'projects',
+      Key: {
+        id: event.pathParameters.id
+      },
+      ConditionExpression: `#owner = :u`,
+      ExpressionAttributeValues: { 
+        ':u': event.requestContext.authorizer.claims['cognito:username'] 
+      },
+      ExpressionAttributeNames: {
+        '#owner': 'owner'
+      }
     };
+
+    if(hasRole(event, 'Admin')) 
+      delete params.ConditionExpression;
+
+    let res = await documentClient.delete(params).promise();
+    return respondWithHeaders(200, res);
+
   } catch (e) {
-    return {
-      body: JSON.stringify(e),
-      statusCode: 500
-    }
+    return respondWithHeaders(500, e);
   }
 };

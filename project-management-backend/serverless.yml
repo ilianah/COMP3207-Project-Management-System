@@ -68,28 +68,31 @@ functions:
           method: POST
           path: projects
           cors: true
+          authorizer:
+            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
   deleteproject:
     handler: deleteproject.handler
     events:
       - http: 
-          cors: true
-          path: projects/{id}
           method: DELETE
+          path: projects/{id}
+          cors: true
+          authorizer:
+            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
           request:
             parameters:
               paths:
                 id: true
+            
   updateproject:
     handler: updateproject.handler
     events:
       - http: 
-          cors: true
-          path: projects/{id}
           method: PUT
-          request:
-            parameters:
-              paths:
-                id: true
+          path: projects
+          cors: true
+          authorizer:
+            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
