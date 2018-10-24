@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import {CognitoAuth} from 'amazon-cognito-auth-js';
+import { CognitoAuth } from 'amazon-cognito-auth-js';
 
 class App extends Component {
   state = {}
@@ -14,24 +13,23 @@ class App extends Component {
       RedirectUriSignIn: 'http://localhost:3000',
       RedirectUriSignOut: 'http://localhost:3000'
     }
-    
+
     this.auth = new CognitoAuth(authData);
-    
+
     this.auth.userhandler = {
       onSuccess: result => {
-        console.log(result.idToken.jwtToken);
-        this.setState({loggedIn: true, username: this.auth.username});
+        this.setState({ loggedIn: true, username: this.auth.username, token: result.idToken.jwtToken });
       },
-    
+
       onFailure: err => {
-        this.setState({loggedIn: false, username: undefined});
+        this.setState({ loggedIn: false, username: undefined });
       }
     }
 
-    if(this.auth.getCachedSession().isValid()) {
+    if (this.auth.getCachedSession().isValid()) {
       this.auth.userhandler.onSuccess(this.auth.getCachedSession());
     }
-    
+
     let curUrl = window.location.href;
     this.auth.parseCognitoWebResponse(curUrl);
   }
@@ -43,11 +41,20 @@ class App extends Component {
             {this.state.loggedIn ?
               <div>
                 You are logged in as {this.state.username}
-                <button onClick={this.logout}>Logout</button>  
+                <button onClick={this.testget}>Do GET Request</button>
+                <button onClick={this.testdelete}>Do DELETE Request</button>
+                <button onClick={this.testupdate}>Do UPDATE Request</button>
+                <button onClick={this.testcreate}>Do CREATE Request</button>
+
+                <button onClick={this.logout}>Logout</button>
               </div>
               :
               <div>
-                You are not logged in. 
+                You are not logged in.
+                <button onClick={this.testget}>Do GET Request</button>
+                <button onClick={this.testdelete}>Do DELETE Request</button>
+                <button onClick={this.testupdate}>Do UPDATE Request</button>
+                <button onClick={this.testcreate}>Do CREATE Request</button>
                 <button onClick={this.login}>Login</button>
               </div>}
           </div>
@@ -63,6 +70,50 @@ class App extends Component {
   logout = () => {
     this.auth.signOut();
   }
+
+  testget = () => {
+    fetch('https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/', {
+      method: 'GET', headers: {
+        Authorization: this.state.token
+      }
+    }).then(res => res.json()).then(console.log)
+  }
+
+  testcreate = () => {
+    fetch('https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/', {
+      method: 'POST', body: JSON.stringify(
+        { "name": "My second project", "description": "My second description", "status": "New", "owner": "lushi", "assignees": ["Misho"] }
+      ), headers: {
+        Authorization: this.state.token
+      }
+    }).then(res => res.json()).then(res => {
+      this.setState({lastId: res.id})
+      console.log(res);
+    })
+  }
+
+  testupdate = () => {
+    fetch('https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/', {
+      method: 'PUT', body: JSON.stringify(
+        { "id": this.state.lastId, "name": "My second project", "description": "My second description", "status": "New", "assignees": ["Misho", "Hari", "Lushi"], owner: "lushi"}
+      ), headers: {
+        Authorization: this.state.token
+      }
+    }).then(res => res.json()).then(res => console.log(res))
+
+  }
+
+  testdelete = () => {
+    fetch('https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/' + this.state.lastId, { 
+      method: 'DELETE',
+      headers: {
+        Authorization: this.state.token
+      }
+    }).then(res => res.text()).then(res => console.log(res))
+  }
+
+
+
 }
 
 export default App;
