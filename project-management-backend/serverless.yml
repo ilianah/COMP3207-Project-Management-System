@@ -53,7 +53,7 @@ provider:
 
 functions:
   listprojects:
-    handler: listprojects.handler
+    handler: project/listprojects.handler
     events:
       - http: 
           method: GET
@@ -62,7 +62,7 @@ functions:
           authorizer:
             arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
   createproject:
-    handler: createproject.handler
+    handler: project/createproject.handler
     events:
       - http: 
           method: POST
@@ -71,7 +71,7 @@ functions:
           authorizer:
             arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
   deleteproject:
-    handler: deleteproject.handler
+    handler: project/deleteproject.handler
     events:
       - http: 
           method: DELETE
@@ -85,7 +85,7 @@ functions:
                 id: true
             
   updateproject:
-    handler: updateproject.handler
+    handler: project/updateproject.handler
     events:
       - http: 
           method: PUT

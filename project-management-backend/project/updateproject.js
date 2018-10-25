@@ -4,7 +4,7 @@ require
 let AWS = require('aws-sdk');
 let uuid = require('uuid');
 let documentClient = new AWS.DynamoDB.DocumentClient();
-let { respondWithHeaders, validationError, hasRole, permissionError } = require('./util/helpers');
+let { respondWithHeaders, permissionError, validationError, hasRole } = require('../util/helpers');
 
 module.exports.handler = async event => {
   if (!hasRole(event, 'Admin') && !hasRole(event, 'ProjectManager'))
@@ -13,7 +13,7 @@ module.exports.handler = async event => {
   let body = JSON.parse(event.body);
 
   if (!hasRole(event, 'Admin') && body.owner !== event.requestContext.authorizer.claims['cognito:username'])
-    return validationError("The project you create must be yours");
+    return validationError("The project you update must be yours");
 
   if (!body.name || body.name.length === 0 || body.name.length > 80)
     return validationError('Project name must be between 1 and 80 characters');
@@ -32,7 +32,7 @@ module.exports.handler = async event => {
 
   try {
     let project = {
-      'id': uuid.v4(),
+      'id': body.id,
       'name': body.name,
       'description': body.description,
       'status': body.status,

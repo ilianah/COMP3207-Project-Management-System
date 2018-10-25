@@ -1,7 +1,7 @@
 'use strict';
 let AWS = require('aws-sdk');
 let documentClient = new AWS.DynamoDB.DocumentClient();
-let { respondWithHeaders, hasRole, permissionError } = require('./util/helpers');
+let { respondWithHeaders, hasRole, permissionError } = require('../util/helpers');
 
 module.exports.handler = async event => {
   if (!hasRole(event, 'Admin') && !hasRole(event, 'ProjectManager'))
