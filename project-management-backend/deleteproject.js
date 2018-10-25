@@ -21,8 +21,11 @@ module.exports.handler = async event => {
       }
     };
 
-    if(hasRole(event, 'Admin')) 
+    if(hasRole(event, 'Admin')) {
       delete params.ConditionExpression;
+      delete params.ExpressionAttributeNames;
+      delete params.ExpressionAttributeValues;
+    }
 
     let res = await documentClient.delete(params).promise();
     return respondWithHeaders(200, res);
