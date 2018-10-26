@@ -1,24 +1,27 @@
 import React, { Component } from 'react';
-import './App.css';
 import { CognitoAuth } from 'amazon-cognito-auth-js';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import AppSplash from './AppSplash';
+import AppHome from './AppHome';
+
+const authData = {
+  ClientId: '2pk41ten9ocjpluelle01hiral',
+  AppWebDomain: 'projectmanagement.auth.us-east-1.amazoncognito.com',
+  TokenScopesArray: ['phone', 'email', 'openid', 'aws.cognito.signin.user.admin', 'profile'],
+  RedirectUriSignIn: 'http://localhost:3000',
+  RedirectUriSignOut: 'http://localhost:3000'
+}
 
 class App extends Component {
   state = {}
+  auth = new CognitoAuth(authData);
 
   componentDidMount() {
-    let authData = {
-      ClientId: '2pk41ten9ocjpluelle01hiral',
-      AppWebDomain: 'projectmanagement.auth.us-east-1.amazoncognito.com',
-      TokenScopesArray: ['phone', 'email', 'openid', 'aws.cognito.signin.user.admin', 'profile'],
-      RedirectUriSignIn: 'http://localhost:3000',
-      RedirectUriSignOut: 'http://localhost:3000'
-    }
 
-    this.auth = new CognitoAuth(authData);
 
     this.auth.userhandler = {
       onSuccess: result => {
-        this.setState({ loggedIn: true, username: this.auth.username, token: result.idToken.jwtToken });
+        this.setState({ token: result.idToken.jwtToken });
       },
 
       onFailure: err => {
@@ -33,33 +36,24 @@ class App extends Component {
     let curUrl = window.location.href;
     this.auth.parseCognitoWebResponse(curUrl);
   }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <div>
-            {this.state.loggedIn ?
-              <div>
-                You are logged in as {this.state.username}
-                <button onClick={this.testget}>Do GET Request</button>
-                <button onClick={this.testdelete}>Do DELETE Request</button>
-                <button onClick={this.testupdate}>Do UPDATE Request</button>
-                <button onClick={this.testcreate}>Do CREATE Request</button>
+      <Router>
+        <div>
+          <Route path="/" exact render={props => {
+            console.log(this.auth);
+            if (this.auth.isUserSignedIn()) {
+              return <Redirect to="/home" />
+            }
+            return <AppSplash {...props} doLogin={this.login} />
+          }} />
 
-                <button onClick={this.logout}>Logout</button>
-              </div>
-              :
-              <div>
-                You are not logged in.
-                <button onClick={this.testget}>Do GET Request</button>
-                <button onClick={this.testdelete}>Do DELETE Request</button>
-                <button onClick={this.testupdate}>Do UPDATE Request</button>
-                <button onClick={this.testcreate}>Do CREATE Request</button>
-                <button onClick={this.login}>Login</button>
-              </div>}
-          </div>
-        </header>
-      </div>
+          <Route path="/home" exact render={props => {
+            return <AppHome auth={this.auth} {...this.state} {...props}/>
+          }} />
+        </div>
+      </Router>
     );
   }
 
@@ -82,12 +76,12 @@ class App extends Component {
   testcreate = () => {
     fetch('https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/', {
       method: 'POST', body: JSON.stringify(
-        { "name": "My second project", "description": "My second description", "status": "New", "owner": "lushi", "assignees": ["Misho"] }
+        { "name": "My second project", "description": "My second description", "status": "New", "owner": "projmanager", "assignees": ["Misho"] }
       ), headers: {
         Authorization: this.state.token
       }
     }).then(res => res.json()).then(res => {
-      this.setState({lastId: res.id})
+      this.setState({ lastId: res.id })
       console.log(res);
     })
   }
@@ -95,7 +89,7 @@ class App extends Component {
   testupdate = () => {
     fetch('https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/', {
       method: 'PUT', body: JSON.stringify(
-        { "id": this.state.lastId, "name": "My second project", "description": "My second description", "status": "New", "assignees": ["Misho", "Hari", "Lushi"], owner: "lushi"}
+        { "id": this.state.lastId, "name": "My second project", "description": "My second description", "status": "New", "assignees": ["Misho", "Hari", "Lushi"], owner: "projmanager" }
       ), headers: {
         Authorization: this.state.token
       }
@@ -104,16 +98,13 @@ class App extends Component {
   }
 
   testdelete = () => {
-    fetch('https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/' + this.state.lastId, { 
+    fetch('https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/' + this.state.lastId, {
       method: 'DELETE',
       headers: {
         Authorization: this.state.token
       }
     }).then(res => res.text()).then(res => console.log(res))
   }
-
-
-
 }
 
 export default App;
