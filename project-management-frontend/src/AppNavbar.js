@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, NavItem, NavLink, UncontrolledDropdown, DropdownItem, DropdownToggle, DropdownMenu, Nav, Collapse, NavbarToggler, NavbarBrand } from 'reactstrap';
+import { Navbar, NavItem, NavLink, UncontrolledDropdown, DropdownItem, DropdownToggle, DropdownMenu, Nav, Collapse, NavbarToggler } from 'reactstrap';
 
 class AppNavbar extends React.Component {
     state = { isOpen: false };
@@ -21,14 +21,21 @@ class AppNavbar extends React.Component {
                             <NavItem>
                                 <NavLink href="/projects">Projects</NavLink>
                             </NavItem>
-                            {role.includes('Admin') &&
+                            {role && role.includes('Admin') &&
                                 <NavItem>
                                     <NavLink href="/users">Users</NavLink>
                                 </NavItem>
                             }
                         </Nav>
                     </Collapse>
-
+                    <Collapse isOpen={this.state.isOpen} navbar>
+                        <Nav navbar className="m-auto">
+                            <form className="form-inline">
+                                <input className="form-control mr-sm-2" type="search" placeholder="Search Project/User..." aria-label="Search" />
+                                <button className="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
+                            </form>
+                        </Nav>
+                    </Collapse>
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
                             <UncontrolledDropdown nav inNavbar>
@@ -37,7 +44,7 @@ class AppNavbar extends React.Component {
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     <DropdownItem href={`/ ${username}`}>My Profile</DropdownItem>
-                                    <DropdownItem divider/>
+                                    <DropdownItem divider />
                                     <DropdownItem>
                                         <NavLink onClick={doLogout}>Logout</NavLink>
                                     </DropdownItem>
