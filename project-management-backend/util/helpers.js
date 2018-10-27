@@ -28,7 +28,7 @@ module.exports.validationCheck = (body) => {
     if (!body.description || body.description.length == 0 || body.description.length > 250)
         return validationError('Project description must be between 1 and 250 characters');
 
-    if (!body.status || (body.status != 'New' && body.status != 'In progress' && body.status != "Completed"))
+    if (!body.status || (body.status != 'New' && body.status != 'In Progress' && body.status != "Complete"))
         return validationError('Invalid project status');
 
     if (!body.owner || body.owner.length === 0)

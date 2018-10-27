@@ -35,7 +35,11 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: 'arn:aws:dynamodb:us-east-1:824057711072:table/projects'
+        - cognito-idp:AdminGetUser
+        - cognito-idp:ListUsers
+      Resource: 
+        - 'arn:aws:dynamodb:us-east-1:824057711072:table/projects'
+        - 'arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim'
 
         
 # you can define service wide environment variables here
@@ -52,8 +56,8 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  listprojects:
-    handler: project/listprojects.handler
+  list:
+    handler: project/list.handler
     events:
       - http: 
           method: GET
@@ -61,8 +65,8 @@ functions:
           cors: true
           authorizer:
             arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
-  createproject:
-    handler: project/createproject.handler
+  create:
+    handler: project/create.handler
     events:
       - http: 
           method: POST
@@ -70,8 +74,8 @@ functions:
           cors: true
           authorizer:
             arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
-  deleteproject:
-    handler: project/deleteproject.handler
+  delete:
+    handler: project/delete.handler
     events:
       - http: 
           method: DELETE
@@ -83,9 +87,8 @@ functions:
             parameters:
               paths:
                 id: true
-            
-  updateproject:
-    handler: project/updateproject.handler
+  update:
+    handler: project/update.handler
     events:
       - http: 
           method: PUT
@@ -93,6 +96,16 @@ functions:
           cors: true
           authorizer:
             arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
+  userlist:
+    handler: users/list.handler
+    events:
+      - http:
+          method: GET
+          path: users
+          cors: true
+          authorizer:
+            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
+
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
