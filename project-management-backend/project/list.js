@@ -10,7 +10,6 @@ module.exports.handler = async event => {
         TableName: 'projects'
       };
       let res = await documentClient.scan(params).promise();
-      console.log(JSON.stringify(event))
       return respondWithHeaders(200, res.Items);
     } catch (e) {
       return respondWithHeaders(500, e);

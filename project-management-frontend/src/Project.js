@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardText, CardHeader, CardFooter, Button } from "reactstrap";
 import { DragSource } from "react-dnd";
-import { FaEdit, FaTimes, FaEye } from "react-icons/fa";
+import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
 
 const cardSource = {
   beginDrag(props) {
@@ -23,7 +23,7 @@ class Project extends React.Component {
     const { project, connectDragSource, isDragging } = this.props;
 
     let statusColors = {
-      New: "bg-danger text-white",
+      New: "bg-dark text-white",
       "In Progress": "bg-success text-white",
       Complete: "bg-info text-white"
     };
@@ -60,18 +60,26 @@ class Project extends React.Component {
             >
               <FaEdit />
             </Button>
-            <Button
-              color="link"
-              size="lg"
-              style={{ color: "white" }}
-              className="p-1 mt-0"
-            >
-              <FaTimes />
-            </Button>
+            {(this.props.project.owner === this.props.username ||
+              this.props.role.includes("Admin")) && (
+              <Button
+                color="link"
+                size="lg"
+                style={{ color: "white" }}
+                className="p-1 mt-0"
+                onClick={this.removeProject}
+              >
+                <FaTrash />
+              </Button>
+            )}
           </CardFooter>
         </Card>
       </div>
     );
   }
+
+  removeProject = () => {
+    this.props.deleteProject(this.props.project);
+  };
 }
 export default DragSource("ProjectCard", cardSource, collect)(Project);

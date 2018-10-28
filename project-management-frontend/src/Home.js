@@ -1,13 +1,13 @@
 import React, { Component, Fragment } from "react";
-import AppNavbar from "./AppNavbar";
+import MNavbar from "./MNavbar";
 
-export default class AppHome extends Component {
+export default class Home extends Component {
   render() {
     const { role, username } = this.props;
 
     return (
       <Fragment>
-        <AppNavbar
+        <MNavbar
           doLogout={this.props.doLogout}
           role={role}
           username={username}

@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from "react";
-import AppNavbar from "./AppNavbar";
-import AppCol from "./AppCol";
+import MNavbar from "./MNavbar";
+import StatusCol from "./StatusCol";
 import { Row } from "reactstrap";
 
-export default class AppProjects extends Component {
+export default class ProjectsList extends Component {
   state = { projects: [] };
 
   componentDidMount() {
@@ -30,7 +30,7 @@ export default class AppProjects extends Component {
 
     return (
       <Fragment>
-        <AppNavbar
+        <MNavbar
           doLogout={this.props.doLogout}
           role={role}
           username={username}
@@ -38,12 +38,15 @@ export default class AppProjects extends Component {
         <div className="background ">
           <Row>
             {statuses.map(s => (
-              <AppCol
+              <StatusCol
                 changeStatus={this.changeStatus}
+                deleteProject={this.deleteProject}
                 role={role}
                 key={s}
                 status={s}
                 projects={this.state.projects.filter(p => p.status === s)}
+                username={this.props.username}
+                token={this.props.token}
               />
             ))}
           </Row>
@@ -68,8 +71,28 @@ export default class AppProjects extends Component {
           Authorization: this.props.token
         }
       }
-    )
-      .then(res => res.json())
-      .then(res => console.log(res));
+    ).then(res => res.json());
+  };
+
+  deleteProject = project => {
+    let projects = [...this.state.projects];
+    projects = projects.filter(p => p.id !== project.id);
+    this.setState({ projects });
+    if (
+      project.owner === this.props.username ||
+      this.props.role.includes("Admin")
+    ) {
+      fetch(
+        "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/" +
+          project.id,
+        {
+          method: "DELETE",
+
+          headers: {
+            Authorization: this.props.token
+          }
+        }
+      ).then(res => res.text());
+    }
   };
 }

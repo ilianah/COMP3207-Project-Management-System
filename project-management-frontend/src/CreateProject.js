@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import AppNavbar from "./AppNavbar";
+import MNavbar from "./MNavbar";
 import {
   Button,
   Form,
@@ -12,7 +12,7 @@ import {
 import Select from "react-select";
 import { Link } from "react-router-dom";
 import makeAnimated from "react-select/lib/animated";
-import { FaArrowRight, FaCheck, FaTimes } from "react-icons/fa";
+import { FaArrowRight, FaCheck, FaArrowLeft } from "react-icons/fa";
 
 export default class CreateProject extends Component {
   state = {
@@ -51,7 +51,7 @@ export default class CreateProject extends Component {
 
     return (
       <Fragment>
-        <AppNavbar
+        <MNavbar
           doLogout={this.props.doLogout}
           role={role}
           username={username}
@@ -163,14 +163,29 @@ export default class CreateProject extends Component {
                 </FormGroup>
               ))}{" "}
               <br />
-              <Button
-                color="link"
-                size="l"
-                style={{ color: "black", margin: "5px auto" }}
-                onClick={this.createProject}
-              >
-                <FaArrowRight />
-              </Button>
+              <div>
+              <Link to="/projects">
+                <Button
+                  outline
+                  color="secondary"
+                  size="l"
+                  style={{ color: "black"}}
+                  className="mt-3 mb-3 mr-2"
+                >
+                  <FaArrowLeft /> Back
+                </Button>
+                </Link>
+                <Button
+                  outline
+                  color="secondary"
+                  size="l"
+                  style={{ color: "black", margin: "10px auto" }}
+                  onClick={this.createProject}
+                  className="mt-3 mb-3 ml-2"
+                >
+                  Confirm <FaArrowRight />
+                </Button>
+              </div>
             </Form>
           </div>
         </div>
@@ -244,8 +259,7 @@ export default class CreateProject extends Component {
         }
       )
         .then(res => res.json())
-        .then(res => {
-        });
+        .then(res => {});
     });
   };
 }

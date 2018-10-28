@@ -15,7 +15,8 @@ import { Link } from "react-router-dom";
 import Project from "./Project";
 import { DropTarget } from "react-dnd";
 
-class AppCol extends React.Component {
+
+class StatusCol extends React.Component {
   render() {
     const { status, role, connectDropTarget, isOver } = this.props;
 
@@ -56,15 +57,15 @@ class AppCol extends React.Component {
           className="mt-3"
           style={{ backgroundColor: "rgba(255,255,255,0.5)" }}
         >
-          <CardBody>
+          <CardBody className="text-center">
             {this.props.projects.map(p => (
-              <Project project={p} key={p.id} />
+              <Project project={p} key={p.id} deleteProject={this.props.deleteProject} token = {this.props.token} username = {this.props.username} role = {this.props.role}/>
             ))}
             <div>
               {role &&
                 !role.includes("Developer") && (
                   <Link to={`/projects/create/${status}`}>
-                    <Button color="link" size="l" style={{ color: "black" }}>
+                    <Button  color="link" size="lg" style={{ color: "gray" }}>
                       <FaPlusCircle />
                     </Button>
                   </Link>
@@ -94,4 +95,4 @@ let collect = (connect, monitor) => {
   };
 };
 
-export default DropTarget(["ProjectCard"], spec, collect)(AppCol);
+export default DropTarget(["ProjectCard"], spec, collect)(StatusCol);

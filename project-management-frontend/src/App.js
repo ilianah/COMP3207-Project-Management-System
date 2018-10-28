@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { CognitoAuth } from "amazon-cognito-auth-js";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
-import AppSplash from "./AppSplash";
-import AppHome from "./AppHome";
-import AppProjects from "./AppProjects";
-import AppUsers from "./AppUsers";
+import Splash from "./Splash";
+import Home from "./Home";
+import ProjectsList from "./ProjectsList";
+import Users from "./Users";
 import CreateProject from "./CreateProject";
 
 const authData = {
@@ -63,7 +63,7 @@ class App extends Component {
               if (this.auth.isUserSignedIn()) {
                 return <Redirect to="/home" />;
               }
-              return <AppSplash {...props} doLogin={this.login} />;
+              return <Splash {...props} doLogin={this.login} />;
             }}
           />
 
@@ -72,7 +72,7 @@ class App extends Component {
             exact
             render={props => {
               return (
-                <AppHome {...this.state} {...props} doLogout={this.logout} />
+                <Home {...this.state} {...props} doLogout={this.logout} />
               );
             }}
           />
@@ -83,7 +83,7 @@ class App extends Component {
             render={props => {
               if (this.auth.isUserSignedIn() && this.state.token)
                 return (
-                  <AppProjects
+                  <ProjectsList
                     {...this.state}
                     {...props}
                     doLogout={this.logout}
@@ -99,7 +99,7 @@ class App extends Component {
             render={props => {
               if (this.auth.isUserSignedIn() && this.state.token)
                 return (
-                  <AppUsers {...this.state} {...props} doLogout={this.logout} />
+                  <Users {...this.state} {...props} doLogout={this.logout} />
                 );
               return null;
             }}
