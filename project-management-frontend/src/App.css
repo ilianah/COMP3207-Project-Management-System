@@ -1,26 +1,90 @@
-.splash-background {
-    height: 100vh;
-    background-position: center;   
-    background-image: url('homepage.jpg');
+.background {
+  height: 100vh;
+  background-position: center;
+  background-image: url("background.jpg");
 }
 
-.splash-header {
-    padding-bottom: 20vh;
+.header {
+  padding-bottom: 20vh;
 }
 
 .splash-title {
-    font-size: 32pt;
-    font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
-    color: rgb(32, 32, 32);
-    background-color: rgba(100, 100, 100, 0.5);
-    border-bottom: 5px solid rgb(105, 105, 105);
-    text-align: center;
+  font-size: 32pt;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  color: rgb(32, 32, 32);
+  background-color: rgba(100, 100, 100, 0.5);
+  border-bottom: 5px solid rgb(105, 105, 105);
+  text-align: center;
+}
+
+.splash-motto {
+  font-size: 16pt;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-style: italic;
+  color: rgb(32, 32, 32);
+  background-color: rgba(100, 100, 100, 0.2);
+  text-align: center;
 }
 
 .splash-buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 180px auto;
-    text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 180px auto;
+  text-align: center;
+}
+
+.quote {
+  font-size: 24pt;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-style: italic;
+  background-color: rgba(100, 100, 100, 0.3);
+  color: rgb(32, 32, 32);
+  text-align: center;
+}
+
+.project-status-header {
+  margin-left: 7px;
+  margin-right: 7px;
+  font-size: 24pt;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  color: rgb(32, 32, 32);
+  background-color: rgba(100, 100, 100, 0.3);
+  text-align: center;
+  border-radius: 15px;
+}
+
+.project-card {
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-top: 15px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  background-color: rgba(100, 100, 100, 0.1);
+  border-radius: 15px;
+}
+
+.project-item {
+  padding-left: 10px;
+  font-size: 12pt;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  color: rgb(32, 32, 32);
+  background-color: rgba(127, 204, 127, 0.8);
+  text-align: left;
+  border-radius: 15px;
+  margin-left: 0.5cm;
+  margin-right: 0.5cm;
+}
+
+.form-box {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  background-color: rgba(100, 100, 100, 0.5);
+}
+
+.message {
+  z-index: 1;
+  position: absolute;
 }

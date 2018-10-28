@@ -1,33 +1,48 @@
-import React, { Component } from 'react';
-import { CognitoAuth } from 'amazon-cognito-auth-js';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import AppSplash from './AppSplash';
-import AppHome from './AppHome';
+import React, { Component } from "react";
+import { CognitoAuth } from "amazon-cognito-auth-js";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import AppSplash from "./AppSplash";
+import AppHome from "./AppHome";
+import AppProjects from "./AppProjects";
+import AppUsers from "./AppUsers";
+import CreateProject from "./CreateProject";
 
 const authData = {
-  ClientId: '2pk41ten9ocjpluelle01hiral',
-  AppWebDomain: 'projectmanagement.auth.us-east-1.amazoncognito.com',
-  TokenScopesArray: ['phone', 'email', 'openid', 'aws.cognito.signin.user.admin', 'profile'],
-  RedirectUriSignIn: 'http://localhost:3000',
-  RedirectUriSignOut: 'http://localhost:3000'
-}
+  ClientId: "2pk41ten9ocjpluelle01hiral",
+  AppWebDomain: "projectmanagement.auth.us-east-1.amazoncognito.com",
+  TokenScopesArray: [
+    "phone",
+    "email",
+    "openid",
+    "aws.cognito.signin.user.admin",
+    "profile"
+  ],
+  RedirectUriSignIn: "http://localhost:3000",
+  RedirectUriSignOut: "http://localhost:3000"
+};
 
 class App extends Component {
-  state = {}
+  state = {};
   auth = new CognitoAuth(authData);
 
   componentDidMount() {
-
-
     this.auth.userhandler = {
       onSuccess: result => {
-        this.setState({ token: result.idToken.jwtToken });
+        let role = this.auth.getCachedSession().accessToken.payload[
+          "cognito:groups"
+        ];
+        let username = this.auth.username;
+        this.setState({ token: result.idToken.jwtToken, role, username });
       },
 
       onFailure: err => {
-        this.setState({ loggedIn: false, username: undefined });
+        this.setState({
+          loggedIn: false,
+          role: undefined,
+          username: undefined
+        });
       }
-    }
+    };
 
     if (this.auth.getCachedSession().isValid()) {
       this.auth.userhandler.onSuccess(this.auth.getCachedSession());
@@ -41,17 +56,70 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Route path="/" exact render={props => {
-            console.log(this.auth);
-            if (this.auth.isUserSignedIn()) {
-              return <Redirect to="/home" />
-            }
-            return <AppSplash {...props} doLogin={this.login} />
-          }} />
+          <Route
+            path="/"
+            exact
+            render={props => {
+              if (this.auth.isUserSignedIn()) {
+                return <Redirect to="/home" />;
+              }
+              return <AppSplash {...props} doLogin={this.login} />;
+            }}
+          />
 
-          <Route path="/home" exact render={props => {
-            return <AppHome auth={this.auth} {...this.state} {...props}/>
-          }} />
+          <Route
+            path="/home"
+            exact
+            render={props => {
+              return (
+                <AppHome {...this.state} {...props} doLogout={this.logout} />
+              );
+            }}
+          />
+
+          <Route
+            path="/projects"
+            exact
+            render={props => {
+              if (this.auth.isUserSignedIn() && this.state.token)
+                return (
+                  <AppProjects
+                    {...this.state}
+                    {...props}
+                    doLogout={this.logout}
+                  />
+                );
+              return null;
+            }}
+          />
+
+          <Route
+            path="/users"
+            exact
+            render={props => {
+              if (this.auth.isUserSignedIn() && this.state.token)
+                return (
+                  <AppUsers {...this.state} {...props} doLogout={this.logout} />
+                );
+              return null;
+            }}
+          />
+
+          <Route
+            path="/projects/create/:status?"
+            render={props => {
+              if (this.auth.isUserSignedIn() && this.state.token)
+                return (
+                  <CreateProject
+                    {...this.state}
+                    {...props}
+                    doLogout={this.logout}
+                  />
+                );
+              return null;
+            }}
+          />
+
         </div>
       </Router>
     );
@@ -59,52 +127,11 @@ class App extends Component {
 
   login = () => {
     this.auth.getSession();
-  }
+  };
 
   logout = () => {
     this.auth.signOut();
-  }
-
-  testget = () => {
-    fetch('https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/', {
-      method: 'GET', headers: {
-        Authorization: this.state.token
-      }
-    }).then(res => res.json()).then(console.log)
-  }
-
-  testcreate = () => {
-    fetch('https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/', {
-      method: 'POST', body: JSON.stringify(
-        { "name": "My second project", "description": "My second description", "status": "New", "owner": "projmanager", "assignees": ["Misho"] }
-      ), headers: {
-        Authorization: this.state.token
-      }
-    }).then(res => res.json()).then(res => {
-      this.setState({ lastId: res.id })
-      console.log(res);
-    })
-  }
-
-  testupdate = () => {
-    fetch('https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/', {
-      method: 'PUT', body: JSON.stringify(
-        { "id": this.state.lastId, "name": "My second project", "description": "My second description", "status": "New", "assignees": ["Misho", "Hari", "Lushi"], owner: "projmanager" }
-      ), headers: {
-        Authorization: this.state.token
-      }
-    }).then(res => res.json()).then(res => console.log(res))
-
-  }
-
-  testdelete = () => {
-    fetch('https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/' + this.state.lastId, {
-      method: 'DELETE',
-      headers: {
-        Authorization: this.state.token
-      }
-    }).then(res => res.text()).then(res => console.log(res))
-  }
+  };
 }
 
 export default App;

@@ -34,7 +34,7 @@ module.exports.validationCheck = (body) => {
     if (!body.owner || body.owner.length === 0)
         return validationError("Each project must have a project owner!");
 
-    if (!body.assignees || !(Array.isArray(body.assignees)) || body.assignees.length < 1)
+    if (!body.assignees || !(Array.isArray(body.assignees)))
         return validationError("Invalid assignees");
 }
 

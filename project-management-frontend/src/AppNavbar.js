@@ -1,5 +1,7 @@
 import React from 'react';
-import { Navbar, NavItem, NavLink, UncontrolledDropdown, DropdownItem, DropdownToggle, DropdownMenu, Nav, Collapse, NavbarToggler } from 'reactstrap';
+import { NavLink } from 'react-router-dom';
+import { Navbar, NavItem, UncontrolledDropdown, DropdownItem, DropdownToggle, DropdownMenu, Nav, Collapse, NavbarToggler } from 'reactstrap';
+import { FaUser } from 'react-icons/fa'
 
 class AppNavbar extends React.Component {
     state = { isOpen: false };
@@ -12,18 +14,22 @@ class AppNavbar extends React.Component {
 
     render() {
         const { doLogout, role, username } = this.props;
+    
         return (
             <div>
-                <Navbar color="light" light expand="md">
+                <Navbar color="transparent" light expand="md">
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav navbar>
                             <NavItem>
-                                <NavLink href="/projects">Projects</NavLink>
+                                <NavLink className="nav-link" to="/home">Home</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink className="nav-link" to="/projects" >Projects</NavLink>
                             </NavItem>
                             {role && role.includes('Admin') &&
                                 <NavItem>
-                                    <NavLink href="/users">Users</NavLink>
+                                    <NavLink className="nav-link" to="/users">Users</NavLink>
                                 </NavItem>
                             }
                         </Nav>
@@ -40,13 +46,13 @@ class AppNavbar extends React.Component {
                         <Nav className="ml-auto" navbar>
                             <UncontrolledDropdown nav inNavbar>
                                 <DropdownToggle nav caret>
-                                    {username}
+                                    <FaUser/> {username}
                                 </DropdownToggle>
                                 <DropdownMenu right>
-                                    <DropdownItem href={`/ ${username}`}>My Profile</DropdownItem>
+                                    <DropdownItem to={`/ ${username}`}>My Profile</DropdownItem>
                                     <DropdownItem divider />
                                     <DropdownItem>
-                                        <NavLink onClick={doLogout}>Logout</NavLink>
+                                        <NavLink className="nav-link" onClick={doLogout} to="/">Logout</NavLink>
                                     </DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledDropdown>
