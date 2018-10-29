@@ -12,7 +12,7 @@ import {
   CardHeader
 } from "reactstrap";
 import { Link } from "react-router-dom";
-import Project from "./Project";
+import Project from "./ProjectCard";
 import { DropTarget } from "react-dnd";
 
 class StatusCol extends React.Component {
@@ -58,13 +58,20 @@ class StatusCol extends React.Component {
         >
           <CardBody className="text-center">
             {this.props.projects.map(p => (
-              <Project project={p} key={p.id} deleteProject={this.props.deleteProject} token = {this.props.token} username = {this.props.username} role = {this.props.role}/>
+              <Project
+                project={p}
+                key={p.id}
+                deleteProject={this.props.deleteProject}
+                token={this.props.token}
+                username={this.props.username}
+                role={this.props.role}
+              />
             ))}
             <div>
               {role &&
                 !role.includes("Developer") && (
                   <Link to={`/projects/create/${status}`}>
-                    <Button  color="link" size="lg" style={{ color: "gray" }}>
+                    <Button color="link" size="lg" style={{ color: "gray" }}>
                       <FaPlusCircle />
                     </Button>
                   </Link>

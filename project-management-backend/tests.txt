@@ -1,5 +1,0 @@
-
-// Create project
-fetch('https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/', { method: 'POST' , body: JSON.stringify(
-      {"name": "My second project", "description": "My second description"}
-)}).then(res => res.text().then(console.log)).catch(console.log)

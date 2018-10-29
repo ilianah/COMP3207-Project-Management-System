@@ -7,7 +7,7 @@ import {
   Label,
   Input,
   Alert,
-  UncontrolledAlert
+  UncontrolledAlert,
 } from "reactstrap";
 import Select from "react-select";
 import { Link } from "react-router-dom";
@@ -70,9 +70,15 @@ export default class CreateProject extends Component {
     })
       .then(res => res.json())
       .then(res => {
-        this.setState({
-          users: res.map(u => ({ label: u.username, value: u.username })),
-          owner: { label: this.props.username, value: this.props.username }
+        this.setState(prevState => {
+          let newState = {
+            users: res.map(u => ({ label: u.username, value: u.username })),
+            owner: { label: this.props.username, value: this.props.username }
+          };
+
+          if (prevState.isUpdating) delete newState.owner;
+
+          return newState;
         });
       });
   }
