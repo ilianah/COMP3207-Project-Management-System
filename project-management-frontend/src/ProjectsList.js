@@ -2,11 +2,15 @@ import React, { Component, Fragment } from "react";
 import MNavbar from "./MNavbar";
 import StatusCol from "./StatusCol";
 import { Row } from "reactstrap";
+import Loader from "react-loader";
 
 export default class ProjectsList extends Component {
   state = { projects: [] };
 
   componentDidMount() {
+    this.setState({
+      loading: true
+    });
     fetch(
       "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/",
       {
@@ -18,7 +22,7 @@ export default class ProjectsList extends Component {
     )
       .then(res => res.json())
       .then(res => {
-        this.setState({ projects: res });
+        this.setState({ projects: res, loading:false });
       });
   }
 
@@ -35,6 +39,8 @@ export default class ProjectsList extends Component {
           role={role}
           username={username}
         />
+        {this.state.loading && <Loader loaded={!this.state.loading} />}
+
         <div className="background ">
           <Row>
             {statuses.map(s => (

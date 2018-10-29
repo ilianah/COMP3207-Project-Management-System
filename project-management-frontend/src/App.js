@@ -120,6 +120,20 @@ class App extends Component {
             }}
           />
 
+            <Route
+            path="/projects/update/:id"
+            render={props => {
+              if (this.auth.isUserSignedIn() && this.state.token)
+                return (
+                  <CreateProject
+                    {...this.state}
+                    {...props}
+                    doLogout={this.logout}
+                  />
+                );
+              return null;
+            }}
+          />
         </div>
       </Router>
     );

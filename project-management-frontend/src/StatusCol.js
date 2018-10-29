@@ -15,7 +15,6 @@ import { Link } from "react-router-dom";
 import Project from "./Project";
 import { DropTarget } from "react-dnd";
 
-
 class StatusCol extends React.Component {
   render() {
     const { status, role, connectDropTarget, isOver } = this.props;

@@ -12,7 +12,8 @@ import {
 import Select from "react-select";
 import { Link } from "react-router-dom";
 import makeAnimated from "react-select/lib/animated";
-import { FaArrowRight, FaCheck, FaArrowLeft } from "react-icons/fa";
+import { FaTimes, FaCheck } from "react-icons/fa";
+import Loader from "react-loader";
 
 export default class CreateProject extends Component {
   state = {
@@ -25,7 +26,41 @@ export default class CreateProject extends Component {
   };
 
   componentDidMount() {
-    this.setState({ status: this.props.match.params.status || "New" });
+    if (this.props.match.params.status) {
+      this.setState({
+        status: this.props.match.params.status || "New",
+        isUpdating: false
+      });
+    } else if (this.props.match.params.id) {
+      this.setState({
+        isUpdating: true,
+        id: this.props.match.params.id,
+        loading: true
+      });
+
+      fetch(
+        "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/",
+        {
+          method: "GET",
+          headers: {
+            Authorization: this.props.token
+          }
+        }
+      )
+        .then(res => res.json())
+        .then(res => {
+          let project = res.find(p => p.id === this.props.match.params.id);
+          project.owner = { label: project.owner, value: project.owner };
+          project.assignees = project.assignees.map(a => ({
+            label: a,
+            value: a
+          }));
+          this.setState({
+            ...project,
+            loading: false
+          });
+        });
+    }
 
     fetch("https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/users/", {
       method: "GET",
@@ -58,136 +93,165 @@ export default class CreateProject extends Component {
         />
         <div className="background ">
           <div className="header" />
-          <div className="form-box">
-            {this.state.validationSuccess && (
-              <div className="message">
-                <Alert color="success">
-                  <h4 className="alert-heading">Success!</h4>
-                  <p>
-                    Your project {this.state.name} was created successfully!
-                  </p>
-                  <hr />
-                  <p className="mb-0">
-                    <Link to="/projects/">
-                      <Button color="success">
-                        <FaCheck />
-                      </Button>{" "}
-                    </Link>
-                  </p>
-                </Alert>
-              </div>
-            )}
 
-            {this.state.validationErrors &&
-              this.state.validationErrors.map(e => (
-                <div className="message" key={e}>
-                  <UncontrolledAlert color="danger">
-                    <h4 className="alert-heading">Error</h4>
-                    <p>{e}</p>
-                  </UncontrolledAlert>
-                </div>
-              ))}
+          {!this.state.isUpdating && (
+            <div className="action">
+              <h1>Creating project {this.state.name} </h1>
+            </div>
+          )}
 
-            <Form style={{ width: "100%" }}>
-              <FormGroup style={{ width: "30%", margin: "5px auto" }}>
-                <Label for="name">
-                  <b>Project Name</b>
-                </Label>
-                <Input
-                  type="text"
-                  name="name"
-                  placeholder="My project"
-                  value={this.state.name}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-              <FormGroup style={{ width: "30%", margin: "5px auto" }}>
-                <Label for="description">
-                  <b>Project Description</b>
-                </Label>
-                <Input
-                  type="textarea"
-                  name="description"
-                  placeholder="My project description"
-                  value={this.state.description}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-              <FormGroup style={{ width: "30%", margin: "5px auto" }}>
-                <Label for="owner">
-                  <b>Project Owner</b>
-                </Label>
-                <Select
-                  name="owner"
-                  value={this.state.owner}
-                  placeholder="Please select Project Owner"
-                  defaultValue={users[0]}
-                  onChange={this.handleOwnerChange}
-                  closeMenuOnSelect={true}
-                  options={users}
-                />
-              </FormGroup>
-              <FormGroup style={{ width: "30%", margin: "5px auto" }}>
-                <Label for="assignees">
-                  <b>Project Assignees</b>
-                </Label>
-                <Select
-                  name="assignees"
-                  value={this.state.assignees}
-                  placeholder="Please select Project Assignees"
-                  closeMenuOnSelect={false}
-                  components={makeAnimated()}
-                  onChange={this.handleAssigneesChange}
-                  isMulti
-                  options={users}
-                />
-              </FormGroup>
-              <FormGroup style={{ width: "30%", margin: "5px auto" }}>
-                <Label for="status">
-                  <b>Project Status</b>
-                </Label>{" "}
-                <br />
-              </FormGroup>
-              {statuses.map(s => (
-                <FormGroup check inline key={s}>
-                  <Label check>
-                    <Input
-                      name="status"
-                      type="radio"
-                      checked={s === this.state.status}
-                      onChange={this.handleStatusChange}
-                      id={s}
-                    />
-                    {s}
+          {this.state.isUpdating && (
+            <div className="action">
+              <h1>Editing project {this.state.name} </h1>
+            </div>
+          )}
+
+          {this.state.loading && <Loader loaded={!this.state.loading} />}
+
+          {!this.state.loading && (
+            <div className="form-box">
+              {this.state.validationSuccess &&
+                !this.state.isUpdating && (
+                  <div className="message">
+                    <Alert color="success">
+                      <h4 className="alert-heading">Success!</h4>
+                      <p>
+                        Your project {this.state.name} was created successfully!
+                      </p>
+                      <hr />
+                      <p className="mb-0">
+                        <Link to="/projects/">
+                          <Button color="success">
+                            <FaCheck />
+                          </Button>{" "}
+                        </Link>
+                      </p>
+                    </Alert>
+                  </div>
+                )}
+
+              {this.state.validationSuccess &&
+                this.state.isUpdating && (
+                  <div className="message">
+                    <Alert color="success">
+                      <h4 className="alert-heading">Success!</h4>
+                      <p>
+                        Your project {this.state.name} was updated successfully!
+                      </p>
+                      <hr />
+                      <p className="mb-0">
+                        <Link to="/projects/">
+                          <Button color="success">
+                            <FaCheck />
+                          </Button>{" "}
+                        </Link>
+                      </p>
+                    </Alert>
+                  </div>
+                )}
+              {this.state.validationErrors &&
+                this.state.validationErrors.map(e => (
+                  <div className="message" key={e}>
+                    <UncontrolledAlert color="danger">
+                      <h4 className="alert-heading">Error</h4>
+                      <p>{e}</p>
+                    </UncontrolledAlert>
+                  </div>
+                ))}
+
+              <Form style={{ width: "100%" }}>
+                <FormGroup style={{ width: "30%", margin: "5px auto" }}>
+                  <Label for="name">
+                    <b>Project Name</b>
                   </Label>
+                  <Input
+                    type="text"
+                    name="name"
+                    placeholder="My project"
+                    value={this.state.name}
+                    onChange={this.handleChange}
+                  />
                 </FormGroup>
-              ))}{" "}
-              <br />
-              <div>
-              <Link to="/projects">
-                <Button
-                  outline
-                  color="secondary"
-                  size="l"
-                  style={{ color: "black"}}
-                  className="mt-3 mb-3 mr-2"
-                >
-                  <FaArrowLeft /> Back
-                </Button>
-                </Link>
-                <Button
-                  outline
-                  color="secondary"
-                  size="l"
-                  style={{ color: "black", margin: "10px auto" }}
-                  onClick={this.createProject}
-                  className="mt-3 mb-3 ml-2"
-                >
-                  Confirm <FaArrowRight />
-                </Button>
-              </div>
-            </Form>
-          </div>
+                <FormGroup style={{ width: "30%", margin: "5px auto" }}>
+                  <Label for="description">
+                    <b>Project Description</b>
+                  </Label>
+                  <Input
+                    type="textarea"
+                    name="description"
+                    placeholder="My project description"
+                    value={this.state.description}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+                <FormGroup style={{ width: "30%", margin: "5px auto" }}>
+                  <Label for="owner">
+                    <b>Project Owner</b>
+                  </Label>
+                  <Select
+                    name="owner"
+                    value={this.state.owner}
+                    placeholder="Please select Project Owner"
+                    defaultValue={users[0]}
+                    onChange={this.handleOwnerChange}
+                    closeMenuOnSelect={true}
+                    options={users}
+                  />
+                </FormGroup>
+                <FormGroup style={{ width: "30%", margin: "5px auto" }}>
+                  <Label for="assignees">
+                    <b>Project Assignees</b>
+                  </Label>
+                  <Select
+                    name="assignees"
+                    value={this.state.assignees}
+                    placeholder="Please select Project Assignees"
+                    closeMenuOnSelect={false}
+                    components={makeAnimated()}
+                    onChange={this.handleAssigneesChange}
+                    isMulti
+                    options={users}
+                  />
+                </FormGroup>
+                <FormGroup style={{ width: "30%", margin: "5px auto" }}>
+                  <Label for="status">
+                    <b>Project Status</b>
+                  </Label>{" "}
+                  <br />
+                </FormGroup>
+                {statuses.map(s => (
+                  <FormGroup check inline key={s}>
+                    <Label check>
+                      <Input
+                        name="status"
+                        type="radio"
+                        checked={s === this.state.status}
+                        onChange={this.handleStatusChange}
+                        id={s}
+                      />
+                      {s}
+                    </Label>
+                  </FormGroup>
+                ))}{" "}
+                <br />
+                <div>
+                  <Link to="/projects">
+                    <Button color="danger" size="l" className="mt-3 mb-3 mr-2">
+                      <FaTimes /> Cancel
+                    </Button>
+                  </Link>
+                  <Button
+                    color="success"
+                    size="l"
+                    onClick={this.createProject}
+                    className="mt-3 mb-3 ml-2"
+                  >
+                    Confirm <FaCheck />
+                  </Button>
+                </div>
+              </Form>
+            </div>
+          )}
         </div>
       </Fragment>
     );
@@ -237,29 +301,49 @@ export default class CreateProject extends Component {
   };
 
   createProject = () => {
-    let { name, description, owner, assignees, status } = this.state;
+    let { name, description, owner, assignees, status, id } = this.state;
     owner = owner.value;
     assignees = assignees.map(a => a.value);
 
     this.validateForm(() => {
-      fetch(
-        "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            name,
-            description,
-            status,
-            owner,
-            assignees
-          }),
-          headers: {
-            Authorization: this.props.token
+      if (this.state.isUpdating) {
+        fetch(
+          "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/",
+          {
+            method: "PUT",
+            body: JSON.stringify({
+              id,
+              name,
+              description,
+              status,
+              assignees,
+              owner
+            }),
+            headers: {
+              Authorization: this.props.token
+            }
           }
-        }
-      )
-        .then(res => res.json())
-        .then(res => {});
+        ).then(res => res.json());
+      } else {
+        fetch(
+          "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              name,
+              description,
+              status,
+              owner,
+              assignees
+            }),
+            headers: {
+              Authorization: this.props.token
+            }
+          }
+        )
+          .then(res => res.json())
+          .then(res => {});
+      }
     });
   };
 }

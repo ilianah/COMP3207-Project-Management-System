@@ -88,3 +88,9 @@
   z-index: 1;
   position: absolute;
 }
+
+.action {
+  font-size: 12pt;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  text-align:center;
+}
