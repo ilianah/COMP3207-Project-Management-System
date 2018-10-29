@@ -7,10 +7,11 @@ import {
   Button,
   Popover,
   PopoverHeader,
-  PopoverBody
+  PopoverBody,
+  UncontrolledTooltip
 } from "reactstrap";
 import { DragSource } from "react-dnd";
-import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
+import { FaEdit, FaTrash, FaEye, FaUnlockAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const cardSource = {
@@ -28,7 +29,7 @@ function collect(connect, monitor) {
   };
 }
 
-class Project extends React.Component {
+class ProjectCard extends React.Component {
   constructor(props) {
     super(props);
 
@@ -67,22 +68,36 @@ class Project extends React.Component {
           <CardText className="text-center">{project.description} </CardText>
           <CardFooter className="text-center p-0">
             <Button
+              id={"view-" + project.id}
               color="link"
               size="lg"
               style={{ color: "white" }}
               className="p-1 mt-0"
             >
               <FaEye />
+              <UncontrolledTooltip
+                placement="bottom"
+                target={"view-" + project.id}
+              >
+                View Project
+              </UncontrolledTooltip>
             </Button>
             <Link to={`/projects/update/${project.id}`}>
-            <Button
-              color="link"
-              size="lg"
-              style={{ color: "white" }}
-              className="p-1 mt-0"
-            >
-              <FaEdit />
-            </Button>
+              <Button
+                id={"edit-" + project.id}
+                color="link"
+                size="lg"
+                style={{ color: "white" }}
+                className="p-1 mt-0"
+              >
+                <FaEdit />
+                <UncontrolledTooltip
+                  placement="bottom"
+                  target={"edit-" + project.id}
+                >
+                  Edit Project
+                </UncontrolledTooltip>
+              </Button>
             </Link>
             {(this.props.project.owner === this.props.username ||
               this.props.role.includes("Admin")) && (
@@ -95,6 +110,12 @@ class Project extends React.Component {
                 onClick={this.toggle}
               >
                 <FaTrash />
+                <UncontrolledTooltip
+                  placement="bottom"
+                  target={"delete-" + project.id}
+                >
+                  Delete Project
+                </UncontrolledTooltip>
                 <Popover
                   placement="bottom"
                   isOpen={this.state.popover}
@@ -107,13 +128,38 @@ class Project extends React.Component {
                   <PopoverBody className="bg-danger text-white text-center">
                     You will not be able to recover the project. Are you sure
                     you want to delete it? <br />
-                    <Button outline color="light" className="mt-2 text-gray" onClick={this.removeProject}>
+                    <Button
+                      outline
+                      color="light"
+                      className="mt-2 text-gray"
+                      onClick={this.removeProject}
+                    >
                       Delete
                     </Button>{" "}
                   </PopoverBody>
                 </Popover>
               </Button>
             )}
+
+            {!this.props.project.assignees.includes(this.props.username) &&
+              this.props.owner !== this.props.username &&
+              !this.props.role.includes("Admin") && (
+                <Button
+                  id={"unlock-" + project.id}
+                  color="link"
+                  size="lg"
+                  style={{ color: "white" }}
+                  className="p-1 mt-0"
+                >
+                  <FaUnlockAlt />
+                  <UncontrolledTooltip
+                    placement="bottom"
+                    target={"unlock-" + project.id}
+                  >
+                    Request Access
+                  </UncontrolledTooltip>
+                </Button>
+              )}
           </CardFooter>
         </Card>
       </div>
@@ -124,6 +170,4 @@ class Project extends React.Component {
     this.props.deleteProject(this.props.project);
   };
 }
-export default DragSource("ProjectCard", cardSource, collect)(Project);
-
-
+export default DragSource("ProjectCard", cardSource, collect)(ProjectCard);
