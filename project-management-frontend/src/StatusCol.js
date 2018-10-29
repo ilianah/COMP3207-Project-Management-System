@@ -9,13 +9,38 @@ import {
   CustomInput,
   Card,
   CardBody,
-  CardHeader
+  CardHeader,
+
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import Project from "./ProjectCard";
 import { DropTarget } from "react-dnd";
 
 class StatusCol extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      selected: "all"
+    };
+    this.onRadioClick = this.onRadioClick.bind(this);
+    
+  }
+
+  onRadioClick(selected) {
+    this.setState({ selected });
+  }
+
+  filterProjects = project => {
+    if (this.state.selected === "assigned") {
+      return (
+        project.assignees.includes(this.props.username) ||
+        project.owner === this.props.username
+      );
+    }
+    return true;
+  };
+
   render() {
     const { status, role, connectDropTarget, isOver } = this.props;
 
@@ -29,25 +54,28 @@ class StatusCol extends React.Component {
             <h3 className="d-inline-block">{status}</h3>
             <UncontrolledButtonDropdown className="float-right">
               <DropdownToggle caret color="link" style={{ color: "black" }} />
+
               <DropdownMenu right>
                 <DropdownItem disabled>
                   <CustomInput
                     type="radio"
-                    id={"example2-" + status}
+                    id={"all-" + status}
                     name="customRadio"
                     label=" View All"
+                    onChange={() => this.onRadioClick("all")}
+                    checked={this.state.selected === "all"}
                   />
                 </DropdownItem>
                 <DropdownItem disabled>
                   <CustomInput
                     type="radio"
-                    id={"example-" + status}
+                    id={"assigned" + status}
                     name="customRadio"
                     label="View Assigned"
+                    onChange={() => this.onRadioClick("assigned")}
+                    checked={this.state.selected === "assigned"}
                   />
                 </DropdownItem>
-                <DropdownItem divider />
-                <DropdownItem>Hide Section</DropdownItem>
               </DropdownMenu>
             </UncontrolledButtonDropdown>
           </CardHeader>
@@ -57,7 +85,7 @@ class StatusCol extends React.Component {
           style={{ backgroundColor: "rgba(255,255,255,0.5)" }}
         >
           <CardBody className="text-center">
-            {this.props.projects.map(p => (
+            {this.props.projects.filter(this.filterProjects).map(p => (
               <Project
                 project={p}
                 key={p.id}
@@ -67,6 +95,7 @@ class StatusCol extends React.Component {
                 role={this.props.role}
               />
             ))}
+
             <div>
               {role &&
                 !role.includes("Developer") && (

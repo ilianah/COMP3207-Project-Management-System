@@ -8,6 +8,10 @@ import {
   Popover,
   PopoverHeader,
   PopoverBody,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
   UncontrolledTooltip
 } from "reactstrap";
 import { DragSource } from "react-dnd";
@@ -33,15 +37,25 @@ class ProjectCard extends React.Component {
   constructor(props) {
     super(props);
 
-    this.toggle = this.toggle.bind(this);
+    this.onPopover = this.onPopover.bind(this);
+    this.onView = this.onView.bind(this);
+
     this.state = {
-      popover: false
+      popover: false,
+      modal: false
     };
   }
 
-  toggle() {
+  onPopover() {
     this.setState({ popover: !this.state.popover });
   }
+
+  onView() {
+    this.setState({
+      modal: !this.state.modal
+    });
+  }
+
   render() {
     const { project, connectDragSource, isDragging } = this.props;
 
@@ -73,14 +87,46 @@ class ProjectCard extends React.Component {
               size="lg"
               style={{ color: "white" }}
               className="p-1 mt-0"
+              onClick={this.onView}
             >
               <FaEye />
               <UncontrolledTooltip
-                placement="bottom"
+                placement="top"
                 target={"view-" + project.id}
               >
                 View Project
               </UncontrolledTooltip>
+
+              <Modal
+                isOpen={this.state.modal}
+                toggle={this.onView}
+                className={this.props.className}
+                target={"view-" + project.id}
+              >
+                <ModalHeader
+                  className={statusColors[project.status]}
+                  toggle={this.onView}
+                >
+                  {" "}
+                  <b>{project.name}</b>
+                  <small>
+                    <i> (Owned by: </i> <b>{project.owner}</b>)
+                  </small>{" "}
+                  <br />
+                </ModalHeader>
+                <ModalBody className={statusColors[project.status]}>
+                  {" "}
+                  {project.description}{" "}
+                </ModalBody>
+                <ModalFooter
+                  className={
+                    "justify-content-start " + statusColors[project.status]
+                  }
+                >
+                  <i>Project Assignees: </i>{" "}
+                  <b>{project.assignees.join(", ")} </b>
+                </ModalFooter>
+              </Modal>
             </Button>
             <Link to={`/projects/update/${project.id}`}>
               <Button
@@ -92,7 +138,7 @@ class ProjectCard extends React.Component {
               >
                 <FaEdit />
                 <UncontrolledTooltip
-                  placement="bottom"
+                  placement="top"
                   target={"edit-" + project.id}
                 >
                   Edit Project
@@ -107,11 +153,11 @@ class ProjectCard extends React.Component {
                 size="lg"
                 style={{ color: "white" }}
                 className="p-1 mt-0"
-                onClick={this.toggle}
+                onClick={this.onPopover}
               >
                 <FaTrash />
                 <UncontrolledTooltip
-                  placement="bottom"
+                  placement="top"
                   target={"delete-" + project.id}
                 >
                   Delete Project
@@ -120,7 +166,7 @@ class ProjectCard extends React.Component {
                   placement="bottom"
                   isOpen={this.state.popover}
                   target={"delete-" + project.id}
-                  toggle={this.toggle}
+                  toggle={this.onPopover}
                 >
                   <PopoverHeader className="bg-danger text-white text-center">
                     Warning
