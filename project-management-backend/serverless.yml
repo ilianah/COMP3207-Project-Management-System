@@ -21,11 +21,11 @@ provider:
   name: aws
   runtime: nodejs8.10
 
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+  # you can overwrite defaults here
+  #  stage: dev
+  #  region: us-east-1
 
-# you can add statements to the Lambda function's IAM Role here
+  # you can add statements to the Lambda function's IAM Role here
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -37,11 +37,11 @@ provider:
         - dynamodb:DeleteItem
         - cognito-idp:AdminGetUser
         - cognito-idp:ListUsers
-      Resource: 
-        - 'arn:aws:dynamodb:us-east-1:824057711072:table/projects'
-        - 'arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim'
+        - cognito-idp:AdminAddUserToGroup
+      Resource:
+        - "arn:aws:dynamodb:us-east-1:824057711072:table/projects"
+        - "arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim"
 
-        
 # you can define service wide environment variables here
 #  environment:
 #    variable1: value1
@@ -59,7 +59,7 @@ functions:
   list:
     handler: project/list.handler
     events:
-      - http: 
+      - http:
           method: GET
           path: projects
           cors: true
@@ -68,7 +68,7 @@ functions:
   create:
     handler: project/create.handler
     events:
-      - http: 
+      - http:
           method: POST
           path: projects
           cors: true
@@ -77,7 +77,7 @@ functions:
   delete:
     handler: project/delete.handler
     events:
-      - http: 
+      - http:
           method: DELETE
           path: projects/{id}
           cors: true
@@ -90,7 +90,7 @@ functions:
   update:
     handler: project/update.handler
     events:
-      - http: 
+      - http:
           method: PUT
           path: projects
           cors: true
@@ -105,3 +105,5 @@ functions:
           cors: true
           authorizer:
             arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
+  usercreate:
+    handler: users/create.handler
