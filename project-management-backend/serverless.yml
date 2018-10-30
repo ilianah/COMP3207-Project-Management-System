@@ -38,6 +38,8 @@ provider:
         - cognito-idp:AdminGetUser
         - cognito-idp:ListUsers
         - cognito-idp:AdminAddUserToGroup
+        - cognito-idp:AdminDeleteUser
+
       Resource:
         - "arn:aws:dynamodb:us-east-1:824057711072:table/projects"
         - "arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln"
@@ -107,3 +109,16 @@ functions:
             arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln
   usercreate:
     handler: users/create.handler
+  userdelete:
+    handler: users/delete.handler
+    events:
+      - http:
+          method: DELETE
+          path: users/{username}
+          cors: true
+          authorizer:
+            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln
+          request:
+            parameters:
+              paths:
+                username: true

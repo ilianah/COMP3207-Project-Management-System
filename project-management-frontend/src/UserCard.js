@@ -9,14 +9,20 @@ import {
   UncontrolledTooltip,
   Popover,
   PopoverBody,
-  PopoverHeader
+  PopoverHeader,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader
 } from "reactstrap";
 import {
   FaBirthdayCake,
   FaUser,
   FaEnvelope,
   FaEdit,
-  FaTrash
+  FaTrash,
+  FaTimes,
+  FaCheck
 } from "react-icons/fa";
 
 class UserCard extends React.Component {
@@ -24,16 +30,28 @@ class UserCard extends React.Component {
     super(props);
 
     this.onPopover = this.onPopover.bind(this);
+    this.onChangeRole = this.onChangeRole.bind(this);
 
     this.state = {
-      popover: false
+    user: {},
+      popover: false,
+      modal: false
     };
   }
   onPopover() {
     this.setState({ popover: !this.state.popover });
   }
+
+  onChangeRole() {
+    this.setState({
+      modal: !this.state.modal
+    });
+  }
+
   render() {
     const { user } = this.props;
+
+    console.log(user)
 
     return (
       <Col sm="4" className="text-center">
@@ -68,7 +86,7 @@ class UserCard extends React.Component {
             </h5>
           </CardBody>
           <CardFooter>
-            <Button
+          <a href={"mailto:" + user.email }><Button
               id={"email-" + user.username}
               color="link"
               size="lg"
@@ -82,13 +100,14 @@ class UserCard extends React.Component {
               >
                 Email {user.username}{" "}
               </UncontrolledTooltip>
-            </Button>
+            </Button> </a>
             <Button
               id={"edit-" + user.username}
               color="link"
               size="lg"
               style={{ color: "black" }}
               className="p-1 mt-0"
+              onClick={this.onChangeRole}
             >
               <FaEdit />
               <UncontrolledTooltip
@@ -97,7 +116,28 @@ class UserCard extends React.Component {
               >
                 Change User Role
               </UncontrolledTooltip>
+
+              <Modal
+                isOpen={this.state.modal}
+                toggle={this.onChangeRole}
+                target={"edit-" + user.username}
+              >
+                <ModalHeader>
+                  {" "}
+                  <b>Changing role of {user.username}</b>
+                </ModalHeader>
+                <ModalBody> Currently has role: ... </ModalBody>
+                <ModalFooter>
+                    <Button color="danger" size="l" className="mt-3 mb-3 mr-2" onClick={this.onChangeRole}>
+                      <FaTimes /> Cancel
+                    </Button>
+                  <Button color="success" size="l" className="mt-3 mb-3 ml-2">
+                    Confirm <FaCheck />
+                  </Button>
+                </ModalFooter>
+              </Modal>
             </Button>
+
             <Button
               id={"delete-" + user.username}
               color="link"
@@ -141,6 +181,11 @@ class UserCard extends React.Component {
       </Col>
     );
   }
+
+  
+  removeUser = () => {
+    this.props.deleteUser(this.props.project);
+  };
 }
 
 export default UserCard;

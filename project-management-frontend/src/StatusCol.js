@@ -13,7 +13,7 @@ import {
 
 } from "reactstrap";
 import { Link } from "react-router-dom";
-import Project from "./ProjectCard";
+import ProjectCard from "./ProjectCard";
 import { DropTarget } from "react-dnd";
 
 class StatusCol extends React.Component {
@@ -86,7 +86,7 @@ class StatusCol extends React.Component {
         >
           <CardBody className="text-center">
             {this.props.projects.filter(this.filterProjects).map(p => (
-              <Project
+              <ProjectCard
                 project={p}
                 key={p.id}
                 deleteProject={this.props.deleteProject}

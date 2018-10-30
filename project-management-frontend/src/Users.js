@@ -21,11 +21,32 @@ export default class Users extends Component {
       .then(res => {
         this.setState({
           users: res,
-          loading:false
+          loading: false
         });
       });
-
   }
+
+  deleteUser = user => {
+    if (this.props.role.includes("Admin")) {
+      fetch(
+        "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/users/" +
+          user.username,
+        {
+          method: "DELETE",
+
+          headers: {
+            Authorization: this.props.token
+          }
+        }
+      )
+        .then(res => res.text())
+        .then(() => {
+          this.setState({
+            users: this.state.users.filter(u => u.username !== user.username)
+          });
+        });
+    }
+  };
 
   render() {
     let username = this.props.username;
@@ -45,7 +66,12 @@ export default class Users extends Component {
           {!this.state.loading && (
             <Row>
               {users.map(u => (
-                <UserCard user={u} key={u.username} />
+                <UserCard
+                  user={u}
+                  key={u.username}
+                  role={role}
+                  deleteUser={e => this.deleteUser(u)}
+                />
               ))}
             </Row>
           )}
