@@ -13,7 +13,8 @@ import {
   Modal,
   ModalBody,
   ModalFooter,
-  ModalHeader
+  ModalHeader,
+  FormGroup
 } from "reactstrap";
 import {
   FaBirthdayCake,
@@ -24,6 +25,8 @@ import {
   FaTimes,
   FaCheck
 } from "react-icons/fa";
+import Select from "react-select";
+import makeAnimated from "react-select/lib/animated";
 
 class UserCard extends React.Component {
   constructor(props) {
@@ -33,7 +36,6 @@ class UserCard extends React.Component {
     this.onChangeRole = this.onChangeRole.bind(this);
 
     this.state = {
-    user: {},
       popover: false,
       modal: false
     };
@@ -43,16 +45,60 @@ class UserCard extends React.Component {
   }
 
   onChangeRole() {
+    this.getUserRole();
     this.setState({
       modal: !this.state.modal
     });
   }
 
+  getUserRole = () => {
+    let { user } = this.props;
+    if (this.props.role.includes("Admin")) {
+      fetch(
+        "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/users/" +
+          user.username,
+        {
+          method: "GET",
+
+          headers: {
+            Authorization: this.props.token
+          }
+        }
+      )
+        .then(res => res.json())
+        .then(res =>
+          this.setState({
+            roles: res
+          })
+        );
+    }
+  };
+
+  // changeUserRole = user => {
+  //   if (this.props.role.includes("Admin")) {
+  //     fetch(
+  //       "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/users/" +
+  //         user.username,
+  //       {
+  //         method: "PUT",
+
+  //         headers: {
+  //           Authorization: this.props.token
+  //         },
+
+  //         body: {
+  //           oldRole: this.state.roles,
+  //           newRole:
+  //         }
+  //       }
+  //     ).then(res => res.text());
+  //   }
+  // };
+
   render() {
     const { user } = this.props;
 
-    console.log(user)
-
+    console.log(this.state.roles);
     return (
       <Col sm="4" className="text-center">
         <Card
@@ -86,21 +132,23 @@ class UserCard extends React.Component {
             </h5>
           </CardBody>
           <CardFooter>
-          <a href={"mailto:" + user.email }><Button
-              id={"email-" + user.username}
-              color="link"
-              size="lg"
-              style={{ color: "black" }}
-              className="p-1 mt-0"
-            >
-              <FaEnvelope />
-              <UncontrolledTooltip
-                placement="top"
-                target={"email-" + user.username}
+            <a href={"mailto:" + user.email}>
+              <Button
+                id={"email-" + user.username}
+                color="link"
+                size="lg"
+                style={{ color: "black" }}
+                className="p-1 mt-0"
               >
-                Email {user.username}{" "}
-              </UncontrolledTooltip>
-            </Button> </a>
+                <FaEnvelope />
+                <UncontrolledTooltip
+                  placement="top"
+                  target={"email-" + user.username}
+                >
+                  Email {user.username}{" "}
+                </UncontrolledTooltip>
+              </Button>{" "}
+            </a>
             <Button
               id={"edit-" + user.username}
               color="link"
@@ -126,11 +174,30 @@ class UserCard extends React.Component {
                   {" "}
                   <b>Changing role of {user.username}</b>
                 </ModalHeader>
-                <ModalBody> Currently has role: ... </ModalBody>
+                <ModalBody>
+                  <FormGroup style={{ margin: "5px auto" }}>
+                    <Select
+                      name="assignees"
+                      placeholder={"Please select roles for " + user.username}
+                      closeMenuOnSelect={false}
+                      components={makeAnimated()}
+                      value={(this.state.roles || []).map(r => ({
+                        value: r,
+                        label: r
+                      }))}
+                      isMulti
+                    />
+                  </FormGroup>{" "}
+                </ModalBody>
                 <ModalFooter>
-                    <Button color="danger" size="l" className="mt-3 mb-3 mr-2" onClick={this.onChangeRole}>
-                      <FaTimes /> Cancel
-                    </Button>
+                  <Button
+                    color="danger"
+                    size="l"
+                    className="mt-3 mb-3 mr-2"
+                    onClick={this.onChangeRole}
+                  >
+                    <FaTimes /> Cancel
+                  </Button>
                   <Button color="success" size="l" className="mt-3 mb-3 ml-2">
                     Confirm <FaCheck />
                   </Button>
@@ -182,7 +249,6 @@ class UserCard extends React.Component {
     );
   }
 
-  
   removeUser = () => {
     this.props.deleteUser(this.props.project);
   };

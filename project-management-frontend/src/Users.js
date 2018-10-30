@@ -71,6 +71,7 @@ export default class Users extends Component {
                   key={u.username}
                   role={role}
                   deleteUser={e => this.deleteUser(u)}
+                  token={this.props.token}
                 />
               ))}
             </Row>

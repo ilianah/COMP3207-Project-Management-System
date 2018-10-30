@@ -11,13 +11,12 @@ module.exports.handler = async event => {
   if (!hasRole(event, "Admin")) return permissionError();
   try {
     let res = await cognitoClient
-
-      .adminDeleteUser({
-        Username: event.pathParameters.username,
-        UserPoolId: "us-east-1_p4KcysLln"
+      .adminListGroupsForUser({
+        UserPoolId: "us-east-1_p4KcysLln",
+        Username: event.pathParameters.username
       })
       .promise();
-    return respondWithHeaders(200, { key: "Halloooo" });
+    return respondWithHeaders(200, res.Groups.map(g => g.GroupName));
   } catch (e) {
     return respondWithHeaders(500, e);
   }
