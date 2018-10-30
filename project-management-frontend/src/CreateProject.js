@@ -7,7 +7,7 @@ import {
   Label,
   Input,
   Alert,
-  UncontrolledAlert,
+  UncontrolledAlert
 } from "reactstrap";
 import Select from "react-select";
 import { Link } from "react-router-dom";
