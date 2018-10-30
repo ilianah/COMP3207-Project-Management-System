@@ -40,7 +40,7 @@ provider:
         - cognito-idp:AdminAddUserToGroup
       Resource:
         - "arn:aws:dynamodb:us-east-1:824057711072:table/projects"
-        - "arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim"
+        - "arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln"
 
 # you can define service wide environment variables here
 #  environment:
@@ -64,7 +64,7 @@ functions:
           path: projects
           cors: true
           authorizer:
-            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
+            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln
   create:
     handler: project/create.handler
     events:
@@ -73,7 +73,7 @@ functions:
           path: projects
           cors: true
           authorizer:
-            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
+            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln
   delete:
     handler: project/delete.handler
     events:
@@ -82,7 +82,7 @@ functions:
           path: projects/{id}
           cors: true
           authorizer:
-            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
+            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln
           request:
             parameters:
               paths:
@@ -95,7 +95,7 @@ functions:
           path: projects
           cors: true
           authorizer:
-            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
+            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln
   userlist:
     handler: users/list.handler
     events:
@@ -104,6 +104,6 @@ functions:
           path: users
           cors: true
           authorizer:
-            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p0HFIGDim
+            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln
   usercreate:
     handler: users/create.handler

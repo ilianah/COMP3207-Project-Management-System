@@ -8,7 +8,7 @@ import Users from "./Users";
 import CreateProject from "./CreateProject";
 
 const authData = {
-  ClientId: "2pk41ten9ocjpluelle01hiral",
+  ClientId: "1nc0sof19hqvahp196dgc7g0bc",
   AppWebDomain: "projectmanagement.auth.us-east-1.amazoncognito.com",
   TokenScopesArray: [
     "phone",
@@ -71,9 +71,7 @@ class App extends Component {
             path="/home"
             exact
             render={props => {
-              return (
-                <Home {...this.state} {...props} doLogout={this.logout} />
-              );
+              return <Home {...this.state} {...props} doLogout={this.logout} />;
             }}
           />
 
@@ -120,7 +118,7 @@ class App extends Component {
             }}
           />
 
-            <Route
+          <Route
             path="/projects/update/:id"
             render={props => {
               if (this.auth.isUserSignedIn() && this.state.token)

@@ -128,23 +128,26 @@ class ProjectCard extends React.Component {
                 </ModalFooter>
               </Modal>
             </Button>
-            <Link to={`/projects/update/${project.id}`}>
-              <Button
-                id={"edit-" + project.id}
-                color="link"
-                size="lg"
-                style={{ color: "white" }}
-                className="p-1 mt-0"
-              >
-                <FaEdit />
-                <UncontrolledTooltip
-                  placement="top"
-                  target={"edit-" + project.id}
+            {(this.props.project.owner === this.props.username ||
+              this.props.role.includes("Admin")) && (
+              <Link to={`/projects/update/${project.id}`}>
+                <Button
+                  id={"edit-" + project.id}
+                  color="link"
+                  size="lg"
+                  style={{ color: "white" }}
+                  className="p-1 mt-0"
                 >
-                  Edit Project
-                </UncontrolledTooltip>
-              </Button>
-            </Link>
+                  <FaEdit />
+                  <UncontrolledTooltip
+                    placement="top"
+                    target={"edit-" + project.id}
+                  >
+                    Edit Project
+                  </UncontrolledTooltip>
+                </Button>
+              </Link>
+            )}
             {(this.props.project.owner === this.props.username ||
               this.props.role.includes("Admin")) && (
               <Button
@@ -199,7 +202,7 @@ class ProjectCard extends React.Component {
                 >
                   <FaUnlockAlt />
                   <UncontrolledTooltip
-                    placement="bottom"
+                    placement="top"
                     target={"unlock-" + project.id}
                   >
                     Request Access
