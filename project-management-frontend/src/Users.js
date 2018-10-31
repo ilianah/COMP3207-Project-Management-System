@@ -60,7 +60,8 @@ export default class Users extends Component {
           role={role}
           username={username}
         />
-        <div className="background">
+        <div className="background" />
+        <div>
           {this.state.loading && <Loader loaded={!this.state.loading} />}
 
           {!this.state.loading && (

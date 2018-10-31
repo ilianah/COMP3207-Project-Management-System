@@ -22,7 +22,7 @@ export default class ProjectsList extends Component {
     )
       .then(res => res.json())
       .then(res => {
-        this.setState({ projects: res, loading:false });
+        this.setState({ projects: res, loading: false });
       });
   }
 
@@ -41,7 +41,8 @@ export default class ProjectsList extends Component {
         />
         {this.state.loading && <Loader loaded={!this.state.loading} />}
 
-        <div className="background ">
+        <div className="background " />
+        <div>
           <Row>
             {statuses.map(s => (
               <StatusCol

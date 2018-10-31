@@ -27,7 +27,7 @@ class MNavbar extends React.Component {
 
     return (
       <div>
-        <Navbar color="transparent" light expand="md">
+        <Navbar light expand="md" style={{ backgroundColor: "white" }}>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav navbar>
