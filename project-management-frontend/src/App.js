@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { CognitoAuth } from "amazon-cognito-auth-js";
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Switch
+} from "react-router-dom";
 import Splash from "./Splash";
 import Home from "./Home";
 import ProjectsList from "./ProjectsList";
@@ -56,89 +61,92 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Route
-            path="/"
-            exact
-            render={props => {
-              if (this.auth.isUserSignedIn()) {
-                return <Redirect to="/home" />;
-              }
-              return <Splash {...props} doLogin={this.login} />;
-            }}
-          />
+          <Switch>
+            <Route
+              path="/"
+              exact
+              render={props => {
+                if (this.auth.isUserSignedIn()) {
+                  return <Redirect to="/home" />;
+                }
+                return <Splash {...props} doLogin={this.login} />;
+              }}
+            />
 
-          <Route
-            path="/home"
-            exact
-            render={props => {
-              return <Home {...this.state} {...props} doLogout={this.logout} />;
-            }}
-          />
-
-          <Route
-            path="/projects"
-            exact
-            render={props => {
-              if (this.auth.isUserSignedIn() && this.state.token)
+            <Route
+              path="/home"
+              exact
+              render={props => {
                 return (
-                  <ProjectsList
-                    {...this.state}
-                    {...props}
-                    doLogout={this.logout}
-                  />
+                  <Home {...this.state} {...props} doLogout={this.logout} />
                 );
-              return <Redirect to="/" />;
-            }}
-          />
+              }}
+            />
 
-          <Route
-            path="/users"
-            exact
-            render={props => {
-              if (this.auth.isUserSignedIn() && this.state.token)
-                return (
-                  <Users {...this.state} {...props} doLogout={this.logout} />
-                );
-              return <Redirect to="/" />;
-            }}
-          />
+            <Route
+              path="/projects"
+              exact
+              render={props => {
+                if (this.auth.isUserSignedIn() && this.state.token)
+                  return (
+                    <ProjectsList
+                      {...this.state}
+                      {...props}
+                      doLogout={this.logout}
+                    />
+                  );
+                return <Redirect to="/" />;
+              }}
+            />
 
-          <Route
-            path="/projects/create/:status?"
-            render={props => {
-              if (this.auth.isUserSignedIn() && this.state.token)
-                return (
-                  <CreateProject
-                    {...this.state}
-                    {...props}
-                    doLogout={this.logout}
-                  />
-                );
-              return <Redirect to="/" />;
-            }}
-          />
+            <Route
+              path="/users"
+              exact
+              render={props => {
+                if (this.auth.isUserSignedIn() && this.state.token)
+                  return (
+                    <Users {...this.state} {...props} doLogout={this.logout} />
+                  );
+                return <Redirect to="/" />;
+              }}
+            />
 
-          <Route
-            path="/projects/update/:id"
-            render={props => {
-              if (this.auth.isUserSignedIn() && this.state.token)
-                return (
-                  <CreateProject
-                    {...this.state}
-                    {...props}
-                    doLogout={this.logout}
-                  />
-                );
-              return <Redirect to="/" />;
-            }}
-          />
+            <Route
+              path="/projects/create/:status?"
+              render={props => {
+                if (this.auth.isUserSignedIn() && this.state.token)
+                  return (
+                    <CreateProject
+                      {...this.state}
+                      {...props}
+                      doLogout={this.logout}
+                    />
+                  );
+                return <Redirect to="/" />;
+              }}
+            />
 
-          <Route
-            path="**"
-            render={props => {
-              return <Redirect to="/" />;
-            }}
-          />
+            <Route
+              path="/projects/update/:id"
+              render={props => {
+                if (this.auth.isUserSignedIn() && this.state.token)
+                  return (
+                    <CreateProject
+                      {...this.state}
+                      {...props}
+                      doLogout={this.logout}
+                    />
+                  );
+                return <Redirect to="/" />;
+              }}
+            />
+
+            <Route
+              render={props => {
+                return <Redirect to="/" />;
+              }}
+            />
+          </Switch>
         </div>
       </Router>
     );
