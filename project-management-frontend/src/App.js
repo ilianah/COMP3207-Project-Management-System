@@ -87,7 +87,7 @@ class App extends Component {
                     doLogout={this.logout}
                   />
                 );
-              return null;
+              return <Redirect to="/" />;
             }}
           />
 
@@ -99,7 +99,7 @@ class App extends Component {
                 return (
                   <Users {...this.state} {...props} doLogout={this.logout} />
                 );
-              return null;
+              return <Redirect to="/" />;
             }}
           />
 
@@ -114,7 +114,7 @@ class App extends Component {
                     doLogout={this.logout}
                   />
                 );
-              return null;
+              return <Redirect to="/" />;
             }}
           />
 
@@ -129,7 +129,14 @@ class App extends Component {
                     doLogout={this.logout}
                   />
                 );
-              return null;
+              return <Redirect to="/" />;
+            }}
+          />
+
+          <Route
+            path="**"
+            render={props => {
+              return <Redirect to="/" />;
             }}
           />
         </div>
