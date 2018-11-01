@@ -4,6 +4,7 @@ import {
   Button,
   Form,
   FormGroup,
+  FormFeedback,
   Label,
   Input,
   Alert,
@@ -82,6 +83,16 @@ export default class CreateProject extends Component {
         });
       });
   }
+
+  isValidName = name => {
+    if (name.length > 0 && name.length < 80) return true;
+    return false;
+  };
+
+  isValidDescription = description => {
+    if (description.length > 0 && description.length < 255) return true;
+    return false;
+  };
 
   render() {
     let username = this.props.username;
@@ -176,7 +187,13 @@ export default class CreateProject extends Component {
                     placeholder="My project"
                     value={this.state.name}
                     onChange={this.handleChange}
+                    valid={this.isValidName(this.state.name)}
+                    invalid={!this.isValidName(this.state.name)}
                   />
+                  <FormFeedback invalid>
+                    {" "}
+                    Project Name must be between 1 and 80 characters{" "}
+                  </FormFeedback>
                 </FormGroup>
                 <FormGroup style={{ width: "30%", margin: "5px auto" }}>
                   <Label for="description">
@@ -188,7 +205,13 @@ export default class CreateProject extends Component {
                     placeholder="My project description"
                     value={this.state.description}
                     onChange={this.handleChange}
+                    valid={this.isValidDescription(this.state.description)}
+                    invalid={!this.isValidDescription(this.state.description)}
                   />
+                  <FormFeedback invalid>
+                    {" "}
+                    Project Description must be between 1 and 255 characters{" "}
+                  </FormFeedback>
                 </FormGroup>
                 <FormGroup style={{ width: "30%", margin: "5px auto" }}>
                   <Label for="owner">
