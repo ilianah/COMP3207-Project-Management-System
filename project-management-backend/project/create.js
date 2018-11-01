@@ -10,10 +10,10 @@ module.exports.handler = async event => {
 
   let body = JSON.parse(event.body);
 
-  if (!hasRole(event, 'Admin') && !hasRole(event, 'ProjectManager'))
+  if (!await hasRole(event, 'Admin') && !await hasRole(event, 'ProjectManager'))
     return permissionError();
 
-  if (!hasRole(event, 'Admin') && body.owner !== event.requestContext.authorizer.claims['cognito:username'])
+  if (!await hasRole(event, 'Admin') && body.owner !== event.requestContext.authorizer.claims['cognito:username'])
     return validationError("The project you create must be yours");
 
   validationCheck(body);

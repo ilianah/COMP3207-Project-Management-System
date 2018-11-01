@@ -4,7 +4,7 @@ let documentClient = new AWS.DynamoDB.DocumentClient();
 let { respondWithHeaders, hasRole, permissionError } = require('../util/helpers');
 
 module.exports.handler = async event => {
-  if (!hasRole(event, 'Admin') && !hasRole(event, 'ProjectManager'))
+  if (!await hasRole(event, 'Admin') && !await hasRole(event, 'ProjectManager'))
     return permissionError();
   try {
     let params = {
@@ -21,7 +21,7 @@ module.exports.handler = async event => {
       }
     };
 
-    if(hasRole(event, 'Admin')) {
+    if(await hasRole(event, 'Admin')) {
       delete params.ConditionExpression;
       delete params.ExpressionAttributeNames;
       delete params.ExpressionAttributeValues;

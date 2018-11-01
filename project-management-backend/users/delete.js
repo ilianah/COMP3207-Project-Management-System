@@ -8,7 +8,7 @@ let {
 } = require("../util/helpers");
 
 module.exports.handler = async event => {
-  if (!hasRole(event, "Admin")) return permissionError();
+  if (!await hasRole(event, "Admin")) return permissionError();
   try {
     let res = await cognitoClient
 

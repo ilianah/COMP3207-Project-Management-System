@@ -9,7 +9,7 @@ let {
 
 module.exports.handler = async event => {
   console.log(1);
-  if (!hasRole(event, "Admin")) return permissionError();
+  if (!await hasRole(event, "Admin")) return permissionError();
   console.log(event.body);
   try {
     event.body = JSON.parse(event.body);

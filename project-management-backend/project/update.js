@@ -12,13 +12,13 @@ let {
 } = require("../util/helpers");
 
 module.exports.handler = async event => {
-  if (!hasRole(event, "Admin") && !hasRole(event, "ProjectManager"))
+  if (!await hasRole(event, "Admin") && !await hasRole(event, "ProjectManager"))
     return permissionError();
 
   let body = JSON.parse(event.body);
 
   if (
-    !hasRole(event, "Admin") &&
+    !await hasRole(event, "Admin") &&
     body.owner !== event.requestContext.authorizer.claims["cognito:username"]
   )
     return validationError("The project you update must be yours");
