@@ -34,27 +34,20 @@ function collect(connect, monitor) {
 }
 
 class ProjectCard extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    popover: false,
+    modal: false
+  };
 
-    this.onPopover = this.onPopover.bind(this);
-    this.onView = this.onView.bind(this);
-
-    this.state = {
-      popover: false,
-      modal: false
-    };
-  }
-
-  onPopover() {
+  onPopover = () => {
     this.setState({ popover: !this.state.popover });
-  }
+  };
 
-  onView() {
+  onView = () => {
     this.setState({
       modal: !this.state.modal
     });
-  }
+  };
 
   render() {
     const { project, connectDragSource, isDragging } = this.props;

@@ -3,9 +3,13 @@ import MNavbar from "./MNavbar";
 import StatusCol from "./StatusCol";
 import { Row } from "reactstrap";
 import Loader from "react-loader";
+import Searchbar from "./Searchbar";
 
 export default class ProjectsList extends Component {
-  state = { projects: [] };
+  state = {
+    projects: [],
+    filter: ""
+  };
 
   componentDidMount() {
     this.setState({
@@ -42,6 +46,11 @@ export default class ProjectsList extends Component {
         {this.state.loading && <Loader loaded={!this.state.loading} />}
 
         <div className="background " />
+
+        <Searchbar
+          value={this.state.filter}
+          onChange={this.onFilterChange}
+        />
         <div>
           <Row>
             {statuses.map(s => (
@@ -51,9 +60,10 @@ export default class ProjectsList extends Component {
                 role={role}
                 key={s}
                 status={s}
-                projects={this.state.projects.filter(p => p.status === s)}
+                projects={this.state.projects.filter(p => p.status === s).filter(p => p.name.toLowerCase().includes(this.state.filter.toLowerCase()))}
                 username={this.props.username}
                 token={this.props.token}
+                filter = {this.state.filter}
               />
             ))}
           </Row>
@@ -79,6 +89,10 @@ export default class ProjectsList extends Component {
         }
       }
     ).then(res => res.json());
+  };
+
+  onFilterChange = e => {
+    this.setState({ filter: e.target.value });
   };
 
   deleteProject = project => {

@@ -52,24 +52,6 @@ class MNavbar extends React.Component {
             </Nav>
           </Collapse>
           <Collapse isOpen={this.state.isOpen} navbar>
-            <Nav navbar className="m-auto">
-              <form className="form-inline">
-                <input
-                  className="form-control mr-sm-2"
-                  type="search"
-                  placeholder="Search Project/User..."
-                  aria-label="Search"
-                />
-                <button
-                  className="btn btn-outline-secondary my-2 my-sm-0"
-                  type="submit"
-                >
-                  Search
-                </button>
-              </form>
-            </Nav>
-          </Collapse>
-          <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>

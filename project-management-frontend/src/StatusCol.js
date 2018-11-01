@@ -9,27 +9,20 @@ import {
   CustomInput,
   Card,
   CardBody,
-  CardHeader,
-
+  CardHeader
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import ProjectCard from "./ProjectCard";
 import { DropTarget } from "react-dnd";
 
 class StatusCol extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    selected: "all"
+  };
 
-    this.state = {
-      selected: "all"
-    };
-    this.onRadioClick = this.onRadioClick.bind(this);
-    
-  }
-
-  onRadioClick(selected) {
+  onRadioClick = selected => {
     this.setState({ selected });
-  }
+  };
 
   filterProjects = project => {
     if (this.state.selected === "assigned") {
@@ -95,7 +88,6 @@ class StatusCol extends React.Component {
                 role={this.props.role}
               />
             ))}
-
             <div>
               {role &&
                 !role.includes("Developer") && (

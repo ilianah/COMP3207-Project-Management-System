@@ -68,3 +68,10 @@
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
   text-align: center;
 }
+
+.searchbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}

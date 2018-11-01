@@ -30,22 +30,18 @@ import Select from "react-select";
 import makeAnimated from "react-select/lib/animated";
 
 class UserCard extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    popover: false,
+    modal: false,
+    loading: true,
+    newRole: ""
+  };
 
-    this.state = {
-      popover: false,
-      modal: false,
-      loading: true,
-      newRole: ""
-    };
-  }
   onPopover = () => {
     this.setState({ popover: !this.state.popover });
   };
 
   onChangeRole = () => {
-    console.log("onChangeRole");
     this.getUserRole();
     this.setState({
       modal: !this.state.modal
@@ -78,6 +74,7 @@ class UserCard extends React.Component {
   };
 
   changeUserRole = () => {
+    this.onChangeRole();
     let user = this.props.user;
     if (this.props.role.includes("Admin")) {
       fetch(

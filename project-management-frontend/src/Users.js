@@ -3,12 +3,15 @@ import MNavbar from "./MNavbar";
 import UserCard from "./UserCard";
 import { Row } from "reactstrap";
 import Loader from "react-loader";
+import Searchbar from "./Searchbar";
 
 export default class Users extends Component {
   state = {
     users: [],
-    loading: true
+    loading: true,
+    filter: ""
   };
+
 
   componentDidMount() {
     fetch("https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/users/", {
@@ -46,7 +49,7 @@ export default class Users extends Component {
           });
         });
     }
-  };
+  }
 
   render() {
     let username = this.props.username;
@@ -61,12 +64,15 @@ export default class Users extends Component {
           username={username}
         />
         <div className="background" />
+
+        <Searchbar value={this.state.searchText} onChange={this.onFilterChange}/>
+
         <div>
           {this.state.loading && <Loader loaded={!this.state.loading} />}
 
           {!this.state.loading && (
             <Row>
-              {users.map(u => (
+              {users.filter(u => u.name.toLowerCase().includes(this.state.filter.toLowerCase())).map(u => (
                 <UserCard
                   user={u}
                   key={u.username}
@@ -80,5 +86,9 @@ export default class Users extends Component {
         </div>
       </Fragment>
     );
+  }
+
+  onFilterChange = e => {
+    this.setState({filter: e.target.value});
   }
 }
