@@ -36,6 +36,7 @@ class App extends Component {
         let role = this.auth.getCachedSession().accessToken.payload[
           "cognito:groups"
         ];
+
         let username = this.auth.username;
         this.setState({ token: result.idToken.jwtToken, role, username });
       },
@@ -95,7 +96,7 @@ class App extends Component {
                       doLogout={this.logout}
                     />
                   );
-                return <Redirect to="/" />;
+                return null;
               }}
             />
 
@@ -122,7 +123,7 @@ class App extends Component {
                       doLogout={this.logout}
                     />
                   );
-                return <Redirect to="/" />;
+                return null;
               }}
             />
 
@@ -137,15 +138,17 @@ class App extends Component {
                       doLogout={this.logout}
                     />
                   );
-                return <Redirect to="/" />;
+                return null;
               }}
             />
 
-            <Route
-              render={props => {
-                return <Redirect to="/" />;
-              }}
-            />
+            {
+              <Route
+                render={props => {
+                  return <Redirect to="/" />;
+                }}
+              />
+            }
           </Switch>
         </div>
       </Router>

@@ -47,10 +47,7 @@ export default class ProjectsList extends Component {
 
         <div className="background " />
 
-        <Searchbar
-          value={this.state.filter}
-          onChange={this.onFilterChange}
-        />
+        <Searchbar value={this.state.filter} onChange={this.onFilterChange} />
         <div>
           <Row>
             {statuses.map(s => (
@@ -60,10 +57,16 @@ export default class ProjectsList extends Component {
                 role={role}
                 key={s}
                 status={s}
-                projects={this.state.projects.filter(p => p.status === s).filter(p => p.name.toLowerCase().includes(this.state.filter.toLowerCase()))}
+                projects={this.state.projects
+                  .filter(p => p.status === s)
+                  .filter(p =>
+                    p.name
+                      .toLowerCase()
+                      .includes(this.state.filter.toLowerCase())
+                  )}
                 username={this.props.username}
                 token={this.props.token}
-                filter = {this.state.filter}
+                filter={this.state.filter}
               />
             ))}
           </Row>
