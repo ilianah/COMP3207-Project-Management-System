@@ -70,7 +70,13 @@ class App extends Component {
                 if (this.auth.isUserSignedIn()) {
                   return <Redirect to="/home" />;
                 }
-                return <Splash {...props} doLogin={this.login} />;
+                return (
+                  <Splash
+                    {...props}
+                    doLogin={this.login}
+                    doSignup={this.signup}
+                  />
+                );
               }}
             />
 
@@ -161,6 +167,11 @@ class App extends Component {
 
   logout = () => {
     this.auth.signOut();
+  };
+
+  signup = () => {
+    window.location =
+      "https://projectmanagement.auth.us-east-1.amazoncognito.com/signup?redirect_uri=http%3A%2F%2Flocalhost%3A3000&response_type=token&client_id=1nc0sof19hqvahp196dgc7g0bc&state=XT66S2tjWJaMq7STToBTdrg9C496Q1pj&scope=phone%20email%20openid%20aws.cognito.signin.user.admin%20profile";
   };
 }
 
