@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, InputGroup, Row, Col } from "reactstrap";
+import { InputGroup, Row, Col } from "reactstrap";
 import { FaSearch } from "react-icons/fa";
 
 class Searchbar extends React.Component {
@@ -19,8 +19,8 @@ class Searchbar extends React.Component {
               value={value}
               onChange={onChange}
             />
-            <div class="input-group-append">
-              <span class="input-group-text">
+            <div className="input-group-append">
+              <span className="input-group-text">
                 <FaSearch />
               </span>
             </div>

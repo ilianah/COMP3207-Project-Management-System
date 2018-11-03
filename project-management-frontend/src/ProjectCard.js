@@ -36,7 +36,8 @@ function collect(connect, monitor) {
 class ProjectCard extends React.Component {
   state = {
     popover: false,
-    modal: false
+    modal: false,
+    users: []
   };
 
   onPopover = () => {
@@ -47,6 +48,21 @@ class ProjectCard extends React.Component {
     this.setState({
       modal: !this.state.modal
     });
+  };
+
+  componentDidMount = () => {
+    fetch("https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/users/", {
+      method: "GET",
+      headers: {
+        Authorization: this.props.token
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          users: res.map(u => ({ label: u.username, value: u.email }))
+        });
+      });
   };
 
   render() {
@@ -192,6 +208,7 @@ class ProjectCard extends React.Component {
                   size="lg"
                   style={{ color: "white" }}
                   className="p-1 mt-0"
+                  onClick={() => this.requestAccess(project)}
                 >
                   <FaUnlockAlt />
                   <UncontrolledTooltip
@@ -211,5 +228,21 @@ class ProjectCard extends React.Component {
   removeProject = () => {
     this.props.deleteProject(this.props.project);
   };
+
+  requestAccess = project => {
+    let ownerEmail = this.state.users.filter(u => u.label === project.owner)[0]
+      .value;
+    let email =
+      "mailto:" +
+      ownerEmail +
+      "?subject=" +
+      "Request Access to " +
+      project.name +
+      "&body=" +
+      "Hi, I would like to be added to project: " +
+      project.name;
+    window.location.href = email;
+  };
 }
+
 export default DragSource("ProjectCard", cardSource, collect)(ProjectCard);
