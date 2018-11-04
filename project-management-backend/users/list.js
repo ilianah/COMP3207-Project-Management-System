@@ -10,7 +10,6 @@ module.exports.handler = async event => {
         UserPoolId: "us-east-1_p4KcysLln"
       })
       .promise();
-
     let users = res.Users.map(u => ({
       username: u.Username,
       name: u.Attributes.find(n => n.Name === "name").Value,

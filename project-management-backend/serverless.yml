@@ -41,6 +41,8 @@ provider:
         - cognito-idp:AdminDeleteUser
         - cognito-idp:AdminListGroupsForUser
         - cognito-idp:AdminRemoveUserFromGroup
+        - cognito-idp:AdminGetUser
+        - cognito-idp:AdminUpdateUserAttributes
 
       Resource:
         - "arn:aws:dynamodb:us-east-1:824057711072:table/projects"
@@ -60,7 +62,7 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  list:
+  listprojects:
     handler: project/list.handler
     events:
       - http:
@@ -69,7 +71,7 @@ functions:
           cors: true
           authorizer:
             arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln
-  create:
+  createproject:
     handler: project/create.handler
     events:
       - http:
@@ -78,7 +80,7 @@ functions:
           cors: true
           authorizer:
             arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln
-  delete:
+  deleteproject:
     handler: project/delete.handler
     events:
       - http:
@@ -91,7 +93,7 @@ functions:
             parameters:
               paths:
                 id: true
-  update:
+  updateproject:
     handler: project/update.handler
     events:
       - http:
@@ -100,7 +102,7 @@ functions:
           cors: true
           authorizer:
             arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln
-  userlist:
+  listuser:
     handler: users/list.handler
     events:
       - http:
@@ -109,9 +111,9 @@ functions:
           cors: true
           authorizer:
             arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln
-  usercreate:
+  createuser:
     handler: users/create.handler
-  userdelete:
+  deleteuser:
     handler: users/delete.handler
     events:
       - http:
@@ -124,7 +126,7 @@ functions:
             parameters:
               paths:
                 username: true
-  usergetrole:
+  getrole:
     handler: users/get-role.handler
     events:
       - http:
@@ -137,12 +139,38 @@ functions:
             parameters:
               paths:
                 username: true
-  userchangerole:
+  changerole:
     handler: users/change-role.handler
     events:
       - http:
           method: PUT
           path: users/{username}
+          cors: true
+          authorizer:
+            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln
+          request:
+            parameters:
+              paths:
+                username: true
+  getskills:
+    handler: users/get-skills.handler
+    events:
+      - http:
+          method: GET
+          path: profile/{username}
+          cors: true
+          authorizer:
+            arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln
+          request:
+            parameters:
+              paths:
+                username: true
+  updateattributes:
+    handler: users/update-attributes.handler
+    events:
+      - http:
+          method: PUT
+          path: profile/{username}
           cors: true
           authorizer:
             arn: arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln
