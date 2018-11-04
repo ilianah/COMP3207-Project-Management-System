@@ -12,12 +12,14 @@ module.exports.handler = async event => {
     event.body = JSON.parse(event.body);
     let skills = event.body.skills;
     let birthdate = event.body.birthdate;
+    console.log(skills)
+    console.log(birthdate)
     let res = await cognitoClient
-      .adminChangeUserAttributes({
+      .adminUpdateUserAttributes({
         UserAttributes: [
           {
             Name: "custom:skills",
-            Value: skills.join(",")
+            Value: skills
           },
           {
             Name: "birthdate",
@@ -30,6 +32,7 @@ module.exports.handler = async event => {
       .promise();
     return respondWithHeaders(200, res);
   } catch (e) {
+    console.log(e)
     return respondWithHeaders(500, e);
   }
 };
