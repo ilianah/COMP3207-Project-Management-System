@@ -1,11 +1,12 @@
-import React, { Component, Fragment } from "react";
+import React from "react";
 import MNavbar from "./MNavbar";
 import StatusCol from "./StatusCol";
 import { Row } from "reactstrap";
 import Loader from "react-loader";
 import Searchbar from "./Searchbar";
+import { getProjects, updateProject, deleteProject } from "./requests";
 
-export default class ProjectsList extends Component {
+export default class ProjectsList extends React.Component {
   state = {
     projects: [],
     filter: ""
@@ -15,19 +16,10 @@ export default class ProjectsList extends Component {
     this.setState({
       loading: true
     });
-    fetch(
-      "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/",
-      {
-        method: "GET",
-        headers: {
-          Authorization: this.props.token
-        }
-      }
-    )
-      .then(res => res.json())
-      .then(res => {
-        this.setState({ projects: res, loading: false });
-      });
+
+    getProjects(this.props.token).then(res => {
+      this.setState({ projects: res, loading: false });
+    });
   }
 
   render() {
@@ -37,7 +29,7 @@ export default class ProjectsList extends Component {
     let statuses = ["New", "In Progress", "Complete"];
 
     return (
-      <Fragment>
+      <React.Fragment>
         <MNavbar
           doLogout={this.props.doLogout}
           role={role}
@@ -71,7 +63,7 @@ export default class ProjectsList extends Component {
             ))}
           </Row>
         </div>
-      </Fragment>
+      </React.Fragment>
     );
   }
 
@@ -82,16 +74,7 @@ export default class ProjectsList extends Component {
     projects.push(newProject);
     this.setState({ projects });
 
-    fetch(
-      "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/",
-      {
-        method: "PUT",
-        body: JSON.stringify(newProject),
-        headers: {
-          Authorization: this.props.token
-        }
-      }
-    ).then(res => res.json());
+    updateProject(this.props.token, newProject);
   };
 
   onFilterChange = e => {
@@ -106,17 +89,7 @@ export default class ProjectsList extends Component {
       project.owner === this.props.username ||
       this.props.role.includes("Admin")
     ) {
-      fetch(
-        "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/" +
-          project.id,
-        {
-          method: "DELETE",
-
-          headers: {
-            Authorization: this.props.token
-          }
-        }
-      ).then(res => res.text());
+      deleteProject(this.props.token, project.id);
     }
   };
 }

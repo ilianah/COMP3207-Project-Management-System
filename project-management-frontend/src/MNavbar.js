@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import {
   Navbar,
   NavItem,
@@ -58,7 +58,9 @@ class MNavbar extends React.Component {
                   <FaUser /> {username}
                 </DropdownToggle>
                 <DropdownMenu right>
-                  <DropdownItem to={`/ ${username}`}>My Profile</DropdownItem>
+                  <Link to={"/users/" + username}>
+                    <DropdownItem to={`/ ${username}`}>My Profile</DropdownItem>
+                  </Link>
                   <DropdownItem divider />
                   <DropdownItem>
                     <NavLink className="nav-link" onClick={doLogout} to="/">

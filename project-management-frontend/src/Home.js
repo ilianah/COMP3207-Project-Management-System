@@ -1,12 +1,12 @@
-import React, { Component, Fragment } from "react";
+import React from "react";
 import MNavbar from "./MNavbar";
 
-export default class Home extends Component {
+export default class Home extends React.Component {
   render() {
     const { role, username } = this.props;
 
     return (
-      <Fragment>
+      <React.Fragment>
         <MNavbar
           doLogout={this.props.doLogout}
           role={role}
@@ -16,7 +16,7 @@ export default class Home extends Component {
           <div className="header" />
           <div className="quote">{this.generateQuote()}</div>
         </div>
-      </Fragment>
+      </React.Fragment>
     );
   }
 

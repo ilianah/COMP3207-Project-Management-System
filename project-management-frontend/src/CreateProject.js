@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React from "react";
 import MNavbar from "./MNavbar";
 import {
   Button,
@@ -15,8 +15,14 @@ import { Link } from "react-router-dom";
 import makeAnimated from "react-select/lib/animated";
 import { FaTimes, FaCheck } from "react-icons/fa";
 import Loader from "react-loader";
+import {
+  getUsers,
+  getProjects,
+  updateProject,
+  createProject
+} from "./requests";
 
-export default class CreateProject extends Component {
+export default class CreateProject extends React.Component {
   state = {
     users: [],
     name: "",
@@ -39,49 +45,32 @@ export default class CreateProject extends Component {
         loading: true
       });
 
-      fetch(
-        "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/",
-        {
-          method: "GET",
-          headers: {
-            Authorization: this.props.token
-          }
-        }
-      )
-        .then(res => res.json())
-        .then(res => {
-          let project = res.find(p => p.id === this.props.match.params.id);
-          project.owner = { label: project.owner, value: project.owner };
-          project.assignees = project.assignees.map(a => ({
-            label: a,
-            value: a
-          }));
-          this.setState({
-            ...project,
-            loading: false
-          });
-        });
-    }
-
-    fetch("https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/users/", {
-      method: "GET",
-      headers: {
-        Authorization: this.props.token
-      }
-    })
-      .then(res => res.json())
-      .then(res => {
-        this.setState(prevState => {
-          let newState = {
-            users: res.map(u => ({ label: u.username, value: u.username })),
-            owner: { label: this.props.username, value: this.props.username }
-          };
-
-          if (prevState.isUpdating) delete newState.owner;
-
-          return newState;
+      getProjects(this.props.token).then(res => {
+        let project = res.find(p => p.id === this.props.match.params.id);
+        project.owner = { label: project.owner, value: project.owner };
+        project.assignees = project.assignees.map(a => ({
+          label: a,
+          value: a
+        }));
+        this.setState({
+          ...project,
+          loading: false
         });
       });
+    }
+
+    getUsers(this.props.token).then(res => {
+      this.setState(prevState => {
+        let newState = {
+          users: res.map(u => ({ label: u.username, value: u.username })),
+          owner: { label: this.props.username, value: this.props.username }
+        };
+
+        if (prevState.isUpdating) delete newState.owner;
+
+        return newState;
+      });
+    });
   }
 
   isValidName = name => {
@@ -102,7 +91,7 @@ export default class CreateProject extends Component {
     const users = this.state.users;
 
     return (
-      <Fragment>
+      <React.Fragment>
         <MNavbar
           doLogout={this.props.doLogout}
           role={role}
@@ -140,7 +129,7 @@ export default class CreateProject extends Component {
                         <Link to="/projects/">
                           <Button color="success">
                             <FaCheck />
-                          </Button>{" "}
+                          </Button>
                         </Link>
                       </p>
                     </Alert>
@@ -160,7 +149,7 @@ export default class CreateProject extends Component {
                         <Link to="/projects/">
                           <Button color="success">
                             <FaCheck />
-                          </Button>{" "}
+                          </Button>
                         </Link>
                       </p>
                     </Alert>
@@ -190,9 +179,8 @@ export default class CreateProject extends Component {
                     valid={this.isValidName(this.state.name)}
                     invalid={!this.isValidName(this.state.name)}
                   />
-                  <FormFeedback invalid>
-                    {" "}
-                    Project Name must be between 1 and 80 characters{" "}
+                  <FormFeedback invalid="true">
+                    Project Name must be between 1 and 80 characters
                   </FormFeedback>
                 </FormGroup>
                 <FormGroup style={{ width: "30%", margin: "5px auto" }}>
@@ -208,9 +196,8 @@ export default class CreateProject extends Component {
                     valid={this.isValidDescription(this.state.description)}
                     invalid={!this.isValidDescription(this.state.description)}
                   />
-                  <FormFeedback invalid>
-                    {" "}
-                    Project Description must be between 1 and 255 characters{" "}
+                  <FormFeedback invalid="true">
+                    Project Description must be between 1 and 255 characters
                   </FormFeedback>
                 </FormGroup>
                 <FormGroup style={{ width: "30%", margin: "5px auto" }}>
@@ -245,7 +232,7 @@ export default class CreateProject extends Component {
                 <FormGroup style={{ width: "30%", margin: "5px auto" }}>
                   <Label for="status">
                     <b>Project Status</b>
-                  </Label>{" "}
+                  </Label>
                   <br />
                 </FormGroup>
                 {statuses.map(s => (
@@ -261,7 +248,7 @@ export default class CreateProject extends Component {
                       {s}
                     </Label>
                   </FormGroup>
-                ))}{" "}
+                ))}
                 <br />
                 <div>
                   <Link to="/projects">
@@ -282,7 +269,7 @@ export default class CreateProject extends Component {
             </div>
           )}
         </div>
-      </Fragment>
+      </React.Fragment>
     );
   }
 
@@ -334,44 +321,15 @@ export default class CreateProject extends Component {
     owner = owner.value;
     assignees = assignees.map(a => a.value);
 
+    let partialProj = { name, description, status, assignees, owner };
     this.validateForm(() => {
       if (this.state.isUpdating) {
-        fetch(
-          "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/",
-          {
-            method: "PUT",
-            body: JSON.stringify({
-              id,
-              name,
-              description,
-              status,
-              assignees,
-              owner
-            }),
-            headers: {
-              Authorization: this.props.token
-            }
-          }
-        ).then(res => res.json());
+        updateProject(this.props.token, {
+          id,
+          ...partialProj
+        });
       } else {
-        fetch(
-          "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/projects/",
-          {
-            method: "POST",
-            body: JSON.stringify({
-              name,
-              description,
-              status,
-              owner,
-              assignees
-            }),
-            headers: {
-              Authorization: this.props.token
-            }
-          }
-        )
-          .then(res => res.json())
-          .then(res => {});
+        createProject(this.props.token, partialProj);
       }
     });
   };
