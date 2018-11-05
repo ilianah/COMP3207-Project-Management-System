@@ -96,7 +96,6 @@ class MyProfile extends React.Component {
             !this.state.skillsloading && (
               <Col className="text-center" md={{ size: 4, offset: 4 }} sm="12">
                 <MyProfileModal
-                  username={username}
                   modal={this.state.modal}
                   onUpdateProfile={this.onUpdateProfile}
                   handleCreate={this.handleCreate}

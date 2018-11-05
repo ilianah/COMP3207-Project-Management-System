@@ -1,19 +1,11 @@
 import React from "react";
 import makeAnimated from "react-select/lib/animated";
 import Loader from "react-loader";
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  FormGroup
-} from "reactstrap";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import CreatableSelect from "react-select/lib/Creatable";
 import { FaTimes, FaCheck } from "react-icons/fa";
 
 export default ({
-  username,
   modal,
   onUpdateProfile,
   loading,
@@ -22,7 +14,6 @@ export default ({
   handleCreate,
   toggleModal
 }) => {
-  console.log(skills);
   let skillsOptions = [];
 
   if (skills.length > 0)
@@ -41,6 +32,7 @@ export default ({
             isMulti
             value={skillsOptions}
             onChange={handleCreate}
+            components={makeAnimated()}
           />
         )}
       </ModalBody>

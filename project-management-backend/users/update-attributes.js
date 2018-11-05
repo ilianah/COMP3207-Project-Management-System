@@ -12,8 +12,6 @@ module.exports.handler = async event => {
     event.body = JSON.parse(event.body);
     let skills = event.body.skills;
     let birthdate = event.body.birthdate;
-    console.log(skills)
-    console.log(birthdate)
     let res = await cognitoClient
       .adminUpdateUserAttributes({
         UserAttributes: [
@@ -32,7 +30,6 @@ module.exports.handler = async event => {
       .promise();
     return respondWithHeaders(200, res);
   } catch (e) {
-    console.log(e)
     return respondWithHeaders(500, e);
   }
 };

@@ -1,6 +1,12 @@
 import React from "react";
 import { Col, Card, CardBody, CardHeader, CardFooter } from "reactstrap";
-import { FaBirthdayCake, FaUser, FaEnvelope } from "react-icons/fa";
+import {
+  FaBirthdayCake,
+  FaUser,
+  FaEnvelope,
+  FaLightbulb,
+  FaSitemap
+} from "react-icons/fa";
 import { getUser, updateRole } from "./requests";
 import UserCardModal from "./user/UserCardModal";
 import UserCardEmailButton from "./user/UserCardEmailButton";
@@ -58,6 +64,8 @@ class UserCard extends React.Component {
 
   render() {
     const { user } = this.props;
+    let hasSkills = typeof user.skills === "string";
+
 
     return (
       <React.Fragment>
@@ -89,6 +97,14 @@ class UserCard extends React.Component {
               />
               <h5>
                 <FaUser /> {user.username}
+              </h5>
+              <h5>
+                <FaSitemap /> {user.group}
+              </h5>
+              <h5>
+                <FaLightbulb />
+                {!hasSkills && <i> {user.username} has no added skills</i>}
+                {hasSkills && user.skills}
               </h5>
               <h5>
                 <FaEnvelope /> {user.email}
