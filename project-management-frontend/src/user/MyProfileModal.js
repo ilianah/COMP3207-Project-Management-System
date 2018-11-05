@@ -20,7 +20,7 @@ export default ({
   birthdate,
   skills,
   handleCreate,
-  onClickEdit
+  toggleModal
 }) => {
   console.log(skills);
   let skillsOptions = [];
@@ -29,7 +29,7 @@ export default ({
     skillsOptions = skills.split(",").map(e => ({ label: e, value: e }));
 
   return (
-    <Modal isOpen={modal} toggle={onClickEdit} target={"edit"}>
+    <Modal isOpen={modal} toggle={toggleModal} target={"edit"}>
       <ModalHeader>
         <b>Updating Skills</b>
       </ModalHeader>
@@ -49,7 +49,7 @@ export default ({
           color="danger"
           size="l"
           className="mt-3 mb-3 mr-2"
-          onClick={onClickEdit}
+          onClick={toggleModal}
         >
           <FaTimes /> Cancel
         </Button>

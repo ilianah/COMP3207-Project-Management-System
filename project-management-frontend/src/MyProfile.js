@@ -47,7 +47,7 @@ class MyProfile extends React.Component {
     });
   };
 
-  onClickEdit = () => {
+  toggleModal = () => {
     this.setState({
       modal: !this.state.modal
     });
@@ -64,6 +64,8 @@ class MyProfile extends React.Component {
         skills: this.state.skillsTemp
       })
     );
+
+    this.toggleModal();
   };
 
   handleCreate = inputValue => {
@@ -98,7 +100,7 @@ class MyProfile extends React.Component {
                   modal={this.state.modal}
                   onUpdateProfile={this.onUpdateProfile}
                   handleCreate={this.handleCreate}
-                  onClickEdit={this.onClickEdit}
+                  toggleModal={this.toggleModal}
                   loading={this.state.loading}
                   birthdate={user.birthdate}
                   skills={this.state.skillsTemp}
@@ -143,7 +145,7 @@ class MyProfile extends React.Component {
                       size="lg"
                       style={{ color: "black" }}
                       className="p-1 mt-0"
-                      onClick={this.onClickEdit}
+                      onClick={this.toggleModal}
                     >
                       <FaEdit />
                       <UncontrolledTooltip
