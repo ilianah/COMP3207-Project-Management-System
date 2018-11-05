@@ -53,7 +53,7 @@ class StatusCol extends React.Component {
                   <CustomInput
                     type="radio"
                     id={"all-" + status}
-                    name="customRadio"
+                    name={"customRadio" + status}
                     label=" View All"
                     onChange={() => this.onRadioClick("all")}
                     checked={this.state.selected === "all"}
