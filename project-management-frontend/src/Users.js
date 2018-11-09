@@ -57,9 +57,17 @@ export default class Users extends React.Component {
           {!this.state.loading && (
             <Row>
               {users
-                .filter(u =>
-                  u.name.toLowerCase().includes(this.state.filter.toLowerCase())
+                .filter(
+                  u =>
+                    u.name
+                      .toLowerCase()
+                      .includes(this.state.filter.toLowerCase()) ||
+                    (typeof u.skills === "string" &&
+                      u.skills
+                        .toLowerCase()
+                        .includes(this.state.filter.toLowerCase()))
                 )
+
                 .map(u => (
                   <UserCard
                     user={u}
@@ -67,6 +75,7 @@ export default class Users extends React.Component {
                     role={role}
                     deleteUser={e => this.deleteUser(u)}
                     token={this.props.token}
+                    filter={this.state.filter ? this.state.filter : null}
                   />
                 ))}
             </Row>

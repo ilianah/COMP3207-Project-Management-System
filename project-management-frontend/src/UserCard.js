@@ -66,6 +66,7 @@ class UserCard extends React.Component {
     const { user } = this.props;
     let hasSkills = typeof user.skills === "string";
 
+    let regex = new RegExp("(" + this.props.filter + ")", "i");
 
     return (
       <React.Fragment>
@@ -85,7 +86,11 @@ class UserCard extends React.Component {
             style={{ backgroundColor: "rgba(255,255,255,0.5)" }}
           >
             <CardHeader className="text-center">
-              <h3>{user.name}</h3>
+              <h3
+                dangerouslySetInnerHTML={{
+                  __html: user.name.replace(regex, "<mark>$1</mark>")
+                }}
+              />
             </CardHeader>
             <CardBody>
               <img
@@ -104,7 +109,13 @@ class UserCard extends React.Component {
               <h5>
                 <FaLightbulb />
                 {!hasSkills && <i> {user.username} has no added skills</i>}
-                {hasSkills && user.skills}
+                {hasSkills && (
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: user.skills.replace(regex, "<mark>$1</mark>")
+                    }}
+                  />
+                )}
               </h5>
               <h5>
                 <FaEnvelope /> {user.email}

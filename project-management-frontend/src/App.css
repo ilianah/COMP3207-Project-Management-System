@@ -75,3 +75,8 @@
   align-items: center;
   position: relative;
 }
+
+mark {
+  padding: 0;
+  background-color: lightblue;
+}
