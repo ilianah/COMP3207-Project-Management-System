@@ -2,6 +2,17 @@ import React from "react";
 import MNavbar from "./MNavbar";
 
 export default class Home extends React.Component {
+  state = { quote: '' };
+
+  componentDidMount() {
+    this.generateQuote();
+    this.task = setInterval(this.generateQuote, 5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.task);
+  }
+
   render() {
     const { role, username } = this.props;
 
@@ -14,7 +25,7 @@ export default class Home extends React.Component {
         />
         <div className="background">
           <div className="header" />
-          <div className="quote">{this.generateQuote()}</div>
+          <div className="quote">{this.state.quote}</div>
         </div>
       </React.Fragment>
     );
@@ -46,7 +57,7 @@ export default class Home extends React.Component {
     ];
 
     let randomQuote = Math.floor(Math.random() * 20);
-
-    return quotes[randomQuote];
+    this.setState({quote: quotes[randomQuote]});
   };
+
 }
