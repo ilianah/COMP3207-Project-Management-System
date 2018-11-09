@@ -28,7 +28,7 @@ const authData = {
 };
 
 class App extends React.Component {
-  state = {};
+  state = { loggingIn: true };
   auth = new CognitoAuth(authData);
 
   componentDidMount() {
@@ -39,14 +39,20 @@ class App extends React.Component {
         ];
 
         let username = this.auth.username;
-        this.setState({ token: result.idToken.jwtToken, role, username });
+        this.setState({
+          token: result.idToken.jwtToken,
+          role,
+          username,
+          loggingIn: false
+        });
       },
 
       onFailure: err => {
         this.setState({
           loggedIn: false,
           role: undefined,
-          username: undefined
+          username: undefined,
+          loggingIn: false
         });
       }
     };
@@ -95,6 +101,8 @@ class App extends React.Component {
               path="/projects"
               exact
               render={props => {
+                if (!this.state.loggingIn && !this.auth.isUserSignedIn())
+                  return <Redirect to="/" />;
                 if (this.auth.isUserSignedIn() && this.state.token)
                   return (
                     <ProjectsList

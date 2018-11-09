@@ -35,7 +35,7 @@ class StatusCol extends React.Component {
   };
 
   render() {
-    const { status, role, connectDropTarget, isOver, users } = this.props;
+    const { status, role, connectDropTarget, isOver } = this.props;
 
     return connectDropTarget(
       <div

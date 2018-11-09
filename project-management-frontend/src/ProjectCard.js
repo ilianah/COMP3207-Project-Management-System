@@ -1,7 +1,6 @@
 import React from "react";
 import { Card, CardText, CardFooter } from "reactstrap";
 import { DragSource } from "react-dnd";
-import { getUsers } from "./requests";
 import ProjectCardHeader from "./project/ProjectCardHeader";
 import ProjectCardViewButton from "./project/ProjectCardViewButton";
 import ProjectCardDeleteButton from "./project/ProjectCardDeleteButton";
