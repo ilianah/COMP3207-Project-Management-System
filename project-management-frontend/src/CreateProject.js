@@ -74,13 +74,11 @@ export default class CreateProject extends React.Component {
   }
 
   isValidName = name => {
-    if (name.length > 0 && name.length < 80) return true;
-    return false;
+    return name.length > 0 && name.length < 80;
   };
 
   isValidDescription = description => {
-    if (description.length > 0 && description.length < 255) return true;
-    return false;
+    return description.length > 0 && description.length < 255;
   };
 
   render() {
@@ -116,45 +114,43 @@ export default class CreateProject extends React.Component {
 
           {!this.state.loading && (
             <div className="form-box">
-              {this.state.validationSuccess &&
-                !this.state.isUpdating && (
-                  <div className="message">
-                    <Alert color="success">
-                      <h4 className="alert-heading">Success!</h4>
-                      <p>
-                        Your project {this.state.name} was created successfully!
-                      </p>
-                      <hr />
-                      <p className="mb-0">
-                        <Link to="/projects/">
-                          <Button color="success">
-                            <FaCheck />
-                          </Button>
-                        </Link>
-                      </p>
-                    </Alert>
-                  </div>
-                )}
+              {this.state.validationSuccess && !this.state.isUpdating && (
+                <div className="message">
+                  <Alert color="success">
+                    <h4 className="alert-heading">Success!</h4>
+                    <p>
+                      Your project {this.state.name} was created successfully!
+                    </p>
+                    <hr />
+                    <p className="mb-0">
+                      <Link to="/projects/">
+                        <Button color="success">
+                          <FaCheck />
+                        </Button>
+                      </Link>
+                    </p>
+                  </Alert>
+                </div>
+              )}
 
-              {this.state.validationSuccess &&
-                this.state.isUpdating && (
-                  <div className="message">
-                    <Alert color="success">
-                      <h4 className="alert-heading">Success!</h4>
-                      <p>
-                        Your project {this.state.name} was updated successfully!
-                      </p>
-                      <hr />
-                      <p className="mb-0">
-                        <Link to="/projects/">
-                          <Button color="success">
-                            <FaCheck />
-                          </Button>
-                        </Link>
-                      </p>
-                    </Alert>
-                  </div>
-                )}
+              {this.state.validationSuccess && this.state.isUpdating && (
+                <div className="message">
+                  <Alert color="success">
+                    <h4 className="alert-heading">Success!</h4>
+                    <p>
+                      Your project {this.state.name} was updated successfully!
+                    </p>
+                    <hr />
+                    <p className="mb-0">
+                      <Link to="/projects/">
+                        <Button color="success">
+                          <FaCheck />
+                        </Button>
+                      </Link>
+                    </p>
+                  </Alert>
+                </div>
+              )}
               {this.state.validationErrors &&
                 this.state.validationErrors.map(e => (
                   <div className="message" key={e}>

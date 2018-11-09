@@ -82,7 +82,7 @@ export default class ProjectsList extends React.Component {
   };
 
   onFilterChange = e => {
-    this.setState({ filter: e.target.value });
+    this.setState({ filter: e.target.value.replace(/[^a-zA-Z0-9]/, "") });
   };
 
   deleteProject = project => {

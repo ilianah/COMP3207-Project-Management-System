@@ -47,7 +47,7 @@ export default class Users extends React.Component {
         <div className="background" />
 
         <Searchbar
-          value={this.state.searchText}
+          value={this.state.filter}
           onChange={this.onFilterChange}
           placeholder="Search by name/skills"
         />
@@ -87,6 +87,6 @@ export default class Users extends React.Component {
   }
 
   onFilterChange = e => {
-    this.setState({ filter: e.target.value });
+    this.setState({ filter: e.target.value.replace(/[^a-zA-Z0-9]/, "") });
   };
 }
