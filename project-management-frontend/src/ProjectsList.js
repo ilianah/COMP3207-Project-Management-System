@@ -39,7 +39,11 @@ export default class ProjectsList extends React.Component {
 
         <div className="background " />
 
-        <Searchbar value={this.state.filter} onChange={this.onFilterChange} />
+        <Searchbar
+          value={this.state.filter}
+          onChange={this.onFilterChange}
+          placeholder="Search by Project Name"
+        />
         <div>
           <Row>
             {statuses.map(s => (

@@ -49,6 +49,7 @@ export default class Users extends React.Component {
         <Searchbar
           value={this.state.searchText}
           onChange={this.onFilterChange}
+          placeholder="Search by name/skills"
         />
 
         <div>
