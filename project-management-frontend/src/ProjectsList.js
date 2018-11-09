@@ -4,7 +4,12 @@ import StatusCol from "./StatusCol";
 import { Row } from "reactstrap";
 import Loader from "react-loader";
 import Searchbar from "./Searchbar";
-import { getProjects, updateProject, deleteProject } from "./requests";
+import {
+  getProjects,
+  updateProject,
+  deleteProject,
+  getUsers
+} from "./requests";
 
 export default class ProjectsList extends React.Component {
   state = {
@@ -19,6 +24,12 @@ export default class ProjectsList extends React.Component {
 
     getProjects(this.props.token).then(res => {
       this.setState({ projects: res, loading: false });
+    });
+
+    getUsers(this.props.token).then(res => {
+      this.setState({
+        users: res.map(u => ({ label: u.username, value: u.email }))
+      });
     });
   }
 
@@ -63,6 +74,7 @@ export default class ProjectsList extends React.Component {
                 username={this.props.username}
                 token={this.props.token}
                 filter={this.state.filter}
+                users={this.state.users}
               />
             ))}
           </Row>

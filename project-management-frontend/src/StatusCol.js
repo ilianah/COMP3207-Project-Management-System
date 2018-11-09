@@ -35,7 +35,7 @@ class StatusCol extends React.Component {
   };
 
   render() {
-    const { status, role, connectDropTarget, isOver } = this.props;
+    const { status, role, connectDropTarget, isOver, users } = this.props;
 
     return connectDropTarget(
       <div
@@ -86,17 +86,17 @@ class StatusCol extends React.Component {
                 token={this.props.token}
                 username={this.props.username}
                 role={this.props.role}
+                users={this.props.users}
               />
             ))}
             <div>
-              {role &&
-                !role.includes("Developer") && (
-                  <Link to={`/projects/create/${status}`}>
-                    <Button color="link" size="lg" style={{ color: "gray" }}>
-                      <FaPlusCircle />
-                    </Button>
-                  </Link>
-                )}
+              {role && !role.includes("Developer") && (
+                <Link to={`/projects/create/${status}`}>
+                  <Button color="link" size="lg" style={{ color: "gray" }}>
+                    <FaPlusCircle />
+                  </Button>
+                </Link>
+              )}
             </div>
           </CardBody>
         </Card>

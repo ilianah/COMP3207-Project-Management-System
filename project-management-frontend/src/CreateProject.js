@@ -38,24 +38,11 @@ export default class CreateProject extends React.Component {
         status: this.props.match.params.status || "New",
         isUpdating: false
       });
-    } else if (this.props.match.params.id) {
+    } else {
       this.setState({
         isUpdating: true,
         id: this.props.match.params.id,
         loading: true
-      });
-
-      getProjects(this.props.token).then(res => {
-        let project = res.find(p => p.id === this.props.match.params.id);
-        project.owner = { label: project.owner, value: project.owner };
-        project.assignees = project.assignees.map(a => ({
-          label: a,
-          value: a
-        }));
-        this.setState({
-          ...project,
-          loading: false
-        });
       });
     }
 
@@ -70,6 +57,27 @@ export default class CreateProject extends React.Component {
 
         return newState;
       });
+
+      if (this.props.match.params.id) {
+        getProjects(this.props.token).then(pRes => {
+          let project = pRes.find(p => p.id === this.props.match.params.id);
+          project.owner = pRes.map(u => u.username).includes(project.owner)
+            ? project.owner
+            : this.props.username;
+          project.owner = { label: project.owner, value: project.owner };
+          project.assignees = project.assignees
+            .filter(a => res.map(u => u.username).includes(a))
+            .map(a => ({
+              label: a,
+              value: a
+            }));
+
+          this.setState({
+            ...project,
+            loading: false
+          });
+        });
+      }
     });
   }
 

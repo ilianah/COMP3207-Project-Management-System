@@ -26,8 +26,7 @@ function collect(connect, monitor) {
 class ProjectCard extends React.Component {
   state = {
     popover: false,
-    modal: false,
-    users: []
+    modal: false
   };
 
   onPopover = () => {
@@ -37,14 +36,6 @@ class ProjectCard extends React.Component {
   onView = () => {
     this.setState({
       modal: !this.state.modal
-    });
-  };
-
-  componentDidMount = () => {
-    getUsers(this.props.token).then(res => {
-      this.setState({
-        users: res.map(u => ({ label: u.username, value: u.email }))
-      });
     });
   };
 
@@ -67,13 +58,20 @@ class ProjectCard extends React.Component {
 
     let isOwnerOrAdmin = project.owner === username || role.includes("Admin");
 
+    let checkUserExists = this.props.users
+      ? this.props.users.map(u => u.label).includes(project.owner)
+      : true;
+
     return connectDragSource(
       <div>
         <Card
           className={"mt-3 " + cls}
           style={{ opacity: isDragging ? 0.5 : 1 }}
         >
-          <ProjectCardHeader project={project} />
+          <ProjectCardHeader
+            project={project}
+            checkUserExists={checkUserExists}
+          />
           <CardText className="text-center">{project.description} </CardText>
           <CardFooter className="text-center p-0">
             <ProjectCardViewButton
@@ -92,25 +90,27 @@ class ProjectCard extends React.Component {
                 removeProject={this.removeProject}
               />
             )}
-            {!project.assignees.includes(username) &&
-              !isOwnerOrAdmin && (
-                <ProjectCardAccessButton
-                  project={project}
-                  requestAccess={this.requestAccess}
-                />
-              )}
+            {!project.assignees.includes(username) && !isOwnerOrAdmin && (
+              <ProjectCardAccessButton
+                project={project}
+                requestAccess={this.requestAccess}
+              />
+            )}
           </CardFooter>
         </Card>
       </div>
     );
   }
+  checkUserExists = project => {
+    return this.props.users.map(u => u.label).includes(project.owner);
+  };
 
   removeProject = () => {
     this.props.deleteProject(this.props.project);
   };
 
   requestAccess = project => {
-    let ownerEmail = this.state.users.filter(u => u.label === project.owner)[0]
+    let ownerEmail = this.props.users.filter(u => u.label === project.owner)[0]
       .value;
     let email =
       "mailto:" +
