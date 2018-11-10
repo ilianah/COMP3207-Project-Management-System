@@ -109,8 +109,11 @@ class ProjectCard extends React.Component {
   };
 
   requestAccess = project => {
-    let ownerEmail = this.props.users.filter(u => u.label === project.owner)[0]
-      .value;
+    let ownerEmail = (
+      this.props.users.filter(u => u.label === project.owner)[0] || {
+        value: "ilianahadzhiatanasova@gmail.com"
+      }
+    ).value;
     let email =
       "mailto:" +
       ownerEmail +
