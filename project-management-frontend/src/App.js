@@ -63,6 +63,12 @@ class App extends React.Component {
 
     let curUrl = window.location.href;
     this.auth.parseCognitoWebResponse(curUrl);
+
+    setTimeout(() => {
+      if (!this.state.loggedIn) {
+        this.setState({ loggingIn: false });
+      }
+    }, 100);
   }
 
   render() {
