@@ -122,12 +122,14 @@ export default class CreateProject extends React.Component {
 
           {!this.state.loading && (
             <div className="form-box">
-              {this.state.validationSuccess && !this.state.isUpdating && (
+              {this.state.validationSuccess ? (
                 <div className="message">
                   <Alert color="success">
                     <h4 className="alert-heading">Success!</h4>
                     <p>
-                      Your project {this.state.name} was created successfully!
+                      Your project {this.state.name} was{" "}
+                      {this.state.isUpdating ? "updated" : "created"}{" "}
+                      successfully!
                     </p>
                     <hr />
                     <p className="mb-0">
@@ -139,137 +141,127 @@ export default class CreateProject extends React.Component {
                     </p>
                   </Alert>
                 </div>
-              )}
+              ) : (
+                <React.Fragment>
+                  {this.state.validationErrors &&
+                    this.state.validationErrors.map(e => (
+                      <div className="message" key={e}>
+                        <UncontrolledAlert color="danger">
+                          <h4 className="alert-heading">Error</h4>
+                          <p>{e}</p>
+                        </UncontrolledAlert>
+                      </div>
+                    ))}
 
-              {this.state.validationSuccess && this.state.isUpdating && (
-                <div className="message">
-                  <Alert color="success">
-                    <h4 className="alert-heading">Success!</h4>
-                    <p>
-                      Your project {this.state.name} was updated successfully!
-                    </p>
-                    <hr />
-                    <p className="mb-0">
-                      <Link to="/projects/">
-                        <Button color="success">
-                          <FaCheck />
-                        </Button>
-                      </Link>
-                    </p>
-                  </Alert>
-                </div>
-              )}
-              {this.state.validationErrors &&
-                this.state.validationErrors.map(e => (
-                  <div className="message" key={e}>
-                    <UncontrolledAlert color="danger">
-                      <h4 className="alert-heading">Error</h4>
-                      <p>{e}</p>
-                    </UncontrolledAlert>
-                  </div>
-                ))}
-
-              <Form style={{ width: "100%" }}>
-                <FormGroup style={{ width: "30%", margin: "5px auto" }}>
-                  <Label for="name">
-                    <b>Project Name</b>
-                  </Label>
-                  <Input
-                    type="text"
-                    name="name"
-                    placeholder="My project"
-                    value={this.state.name}
-                    onChange={this.handleChange}
-                    valid={this.isValidName(this.state.name)}
-                    invalid={!this.isValidName(this.state.name)}
-                  />
-                  <FormFeedback invalid="true">
-                    Project Name must be between 1 and 80 characters
-                  </FormFeedback>
-                </FormGroup>
-                <FormGroup style={{ width: "30%", margin: "5px auto" }}>
-                  <Label for="description">
-                    <b>Project Description</b>
-                  </Label>
-                  <Input
-                    type="textarea"
-                    name="description"
-                    placeholder="My project description"
-                    value={this.state.description}
-                    onChange={this.handleChange}
-                    valid={this.isValidDescription(this.state.description)}
-                    invalid={!this.isValidDescription(this.state.description)}
-                  />
-                  <FormFeedback invalid="true">
-                    Project Description must be between 1 and 255 characters
-                  </FormFeedback>
-                </FormGroup>
-                <FormGroup style={{ width: "30%", margin: "5px auto" }}>
-                  <Label for="owner">
-                    <b>Project Owner</b>
-                  </Label>
-                  <Select
-                    name="owner"
-                    value={this.state.owner}
-                    placeholder="Please select Project Owner"
-                    defaultValue={users[0]}
-                    onChange={this.handleOwnerChange}
-                    closeMenuOnSelect={true}
-                    options={users}
-                  />
-                </FormGroup>
-                <FormGroup style={{ width: "30%", margin: "5px auto" }}>
-                  <Label for="assignees">
-                    <b>Project Assignees</b>
-                  </Label>
-                  <Select
-                    name="assignees"
-                    value={this.state.assignees}
-                    placeholder="Please select Project Assignees"
-                    closeMenuOnSelect={false}
-                    components={makeAnimated()}
-                    onChange={this.handleAssigneesChange}
-                    isMulti
-                    options={users}
-                  />
-                </FormGroup>
-                <FormGroup style={{ width: "30%", margin: "5px auto" }}>
-                  <Label for="status">
-                    <b>Project Status</b>
-                  </Label>
-                  <br />
-                </FormGroup>
-                {statuses.map(s => (
-                  <FormGroup check inline key={s}>
-                    <Label check>
+                  <Form style={{ width: "100%" }}>
+                    <FormGroup style={{ width: "30%", margin: "5px auto" }}>
+                      <Label for="name">
+                        <b>Project Name</b>
+                      </Label>
                       <Input
-                        name="status"
-                        type="radio"
-                        checked={s === this.state.status}
-                        onChange={this.handleStatusChange}
-                        id={s}
+                        type="text"
+                        name="name"
+                        placeholder="My project"
+                        value={this.state.name}
+                        onChange={this.handleChange}
+                        valid={this.isValidName(this.state.name)}
+                        invalid={!this.isValidName(this.state.name)}
                       />
-                      {s}
-                    </Label>
-                  </FormGroup>
-                ))}
-                <br />
-                <div>
-                  <Link to="/projects">
-                    <Button color="danger" size="l" className="mt-3 mb-3 mr-2">
-                      <FaTimes /> Cancel
-                    </Button>
-                  </Link>
-                  <Button
-                    color="success"
-                    size="l"
-                    onClick={this.createProject}
-                    className="mt-3 mb-3 ml-2"
-                  >
-                    Confirm <FaCheck />
-                  </Button>
-                </div>
-              </Form>
+                      <FormFeedback invalid="true">
+                        Project Name must be between 1 and 80 characters
+                      </FormFeedback>
+                    </FormGroup>
+                    <FormGroup style={{ width: "30%", margin: "5px auto" }}>
+                      <Label for="description">
+                        <b>Project Description</b>
+                      </Label>
+                      <Input
+                        type="textarea"
+                        name="description"
+                        placeholder="My project description"
+                        value={this.state.description}
+                        onChange={this.handleChange}
+                        valid={this.isValidDescription(this.state.description)}
+                        invalid={
+                          !this.isValidDescription(this.state.description)
+                        }
+                      />
+                      <FormFeedback invalid="true">
+                        Project Description must be between 1 and 255 characters
+                      </FormFeedback>
+                    </FormGroup>
+                    <FormGroup style={{ width: "30%", margin: "5px auto" }}>
+                      <Label for="owner">
+                        <b>Project Owner</b>
+                      </Label>
+                      <Select
+                        name="owner"
+                        value={this.state.owner}
+                        placeholder="Please select Project Owner"
+                        defaultValue={users[0]}
+                        onChange={this.handleOwnerChange}
+                        closeMenuOnSelect={true}
+                        options={users}
+                      />
+                    </FormGroup>
+                    <FormGroup style={{ width: "30%", margin: "5px auto" }}>
+                      <Label for="assignees">
+                        <b>Project Assignees</b>
+                      </Label>
+                      <Select
+                        name="assignees"
+                        value={this.state.assignees}
+                        placeholder="Please select Project Assignees"
+                        closeMenuOnSelect={false}
+                        components={makeAnimated()}
+                        onChange={this.handleAssigneesChange}
+                        isMulti
+                        options={users}
+                      />
+                    </FormGroup>
+                    <FormGroup style={{ width: "30%", margin: "5px auto" }}>
+                      <Label for="status">
+                        <b>Project Status</b>
+                      </Label>
+                      <br />
+                    </FormGroup>
+                    {statuses.map(s => (
+                      <FormGroup check inline key={s}>
+                        <Label check>
+                          <Input
+                            name="status"
+                            type="radio"
+                            checked={s === this.state.status}
+                            onChange={this.handleStatusChange}
+                            id={s}
+                          />
+                          {s}
+                        </Label>
+                      </FormGroup>
+                    ))}
+                    <br />
+                    <div>
+                      <Link to="/projects">
+                        <Button
+                          color="danger"
+                          size="l"
+                          className="mt-3 mb-3 mr-2"
+                        >
+                          <FaTimes /> Cancel
+                        </Button>
+                      </Link>
+                      <Button
+                        color="success"
+                        size="l"
+                        onClick={this.createProject}
+                        className="mt-3 mb-3 ml-2"
+                      >
+                        Confirm <FaCheck />
+                      </Button>
+                    </div>
+                  </Form>
+                </React.Fragment>
+              )}
             </div>
           )}
         </div>
