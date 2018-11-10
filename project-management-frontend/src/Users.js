@@ -68,7 +68,7 @@ export default class Users extends React.Component {
                         .toLowerCase()
                         .includes(this.state.filter.toLowerCase()))
                 )
-
+                .filter(u => u.username !== username)
                 .map(u => (
                   <UserCard
                     user={u}
