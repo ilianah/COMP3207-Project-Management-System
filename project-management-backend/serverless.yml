@@ -43,10 +43,14 @@ provider:
         - cognito-idp:AdminRemoveUserFromGroup
         - cognito-idp:AdminGetUser
         - cognito-idp:AdminUpdateUserAttributes
-
       Resource:
         - "arn:aws:dynamodb:us-east-1:824057711072:table/projects"
         - "arn:aws:cognito-idp:us-east-1:824057711072:userpool/us-east-1_p4KcysLln"
+    - Effect: "Allow"
+      Action:
+        - ses:SendEmail
+      Resource:
+        - '*'
 
 # you can define service wide environment variables here
 #  environment:
