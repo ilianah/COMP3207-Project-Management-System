@@ -125,6 +125,8 @@ class App extends React.Component {
               path="/users"
               exact
               render={props => {
+                if (!this.state.loggingIn && !this.auth.isUserSignedIn())
+                  return <Redirect to="/" />;
                 if (this.auth.isUserSignedIn() && this.state.token)
                   return (
                     <Users {...this.state} {...props} doLogout={this.logout} />
@@ -137,6 +139,8 @@ class App extends React.Component {
               path="/users/:username?"
               exact
               render={props => {
+                if (!this.state.loggingIn && !this.auth.isUserSignedIn())
+                  return <Redirect to="/" />;
                 if (this.auth.isUserSignedIn() && this.state.token)
                   return (
                     <MyProfile
@@ -152,6 +156,8 @@ class App extends React.Component {
             <Route
               path="/projects/create/:status?"
               render={props => {
+                if (!this.state.loggingIn && !this.auth.isUserSignedIn())
+                  return <Redirect to="/" />;
                 if (this.auth.isUserSignedIn() && this.state.token)
                   return (
                     <CreateProject
@@ -167,6 +173,8 @@ class App extends React.Component {
             <Route
               path="/projects/update/:id"
               render={props => {
+                if (!this.state.loggingIn && !this.auth.isUserSignedIn())
+                  return <Redirect to="/" />;
                 if (this.auth.isUserSignedIn() && this.state.token)
                   return (
                     <CreateProject
