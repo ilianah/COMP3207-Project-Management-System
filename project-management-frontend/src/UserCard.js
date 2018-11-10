@@ -58,6 +58,7 @@ class UserCard extends React.Component {
         this.setState({
           oldRole: this.state.roles
         });
+        this.getUserRole();
       });
     }
   };
@@ -104,7 +105,7 @@ class UserCard extends React.Component {
                 <FaUser /> {user.username}
               </h5>
               <h5>
-                <FaSitemap /> {user.group}
+                <FaSitemap /> {this.state.oldRole || user.group}
               </h5>
               <h5>
                 <FaLightbulb />
