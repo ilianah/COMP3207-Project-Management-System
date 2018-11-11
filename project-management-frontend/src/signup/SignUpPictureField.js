@@ -1,5 +1,6 @@
 import React from "react";
 import { FormGroup, Input, Label, FormFeedback } from "reactstrap";
+
 let validate = input => {
   return input.length > 0;
 };

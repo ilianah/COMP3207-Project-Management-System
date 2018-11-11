@@ -121,7 +121,6 @@ class VerificationCode extends React.Component {
     cognitoUser.confirmRegistration(this.state.code, true, (err, result) => {
       this.setState({ verifying: false });
       if (err) {
-        console.log(err.message || JSON.stringify(err));
         this.setState({ error: err, modal: true });
         return;
       }

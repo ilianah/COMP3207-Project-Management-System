@@ -25,6 +25,7 @@ class MyProfile extends React.Component {
   state = {
     user: [],
     skills: "",
+    picture: "",
     userloading: true,
     skillsloading: true,
     modal: false
@@ -34,7 +35,8 @@ class MyProfile extends React.Component {
     getUsers(this.props.token).then(res => {
       this.setState({
         user: res.filter(u => u.username === this.props.username),
-        userloading: false
+        userloading: false,
+        picture: res.filter(u => u.username === this.props.username)[0].picture
       });
     });
 
@@ -58,10 +60,16 @@ class MyProfile extends React.Component {
       this.props.token,
       this.props.username,
       this.state.skillsTemp,
+      this.state.picture,
       this.state.user[0].birthdate
     ).then(() =>
       this.setState({
-        skills: this.state.skillsTemp
+        skills: this.state.skillsTemp,
+        picture: this.state.picture,
+        user: {
+          ...this.state.user,
+          picture: this.state.picture
+        }
       })
     );
 
@@ -73,13 +81,18 @@ class MyProfile extends React.Component {
     this.setState({ skillsTemp: skills });
   };
 
+  handleUpdateUserPhoto = e => {
+    this.setState({
+      picture: e.target.value
+    });
+  };
+
   render() {
-    console.log(this.state.userloading);
-    console.log(this.state.skillsloading);
     const { role, username } = this.props;
     let user = this.state.user[0];
     let hasSkills = this.state.skills !== "";
 
+    console.log(this.state.picture);
     return (
       <Fragment>
         <MNavbar
@@ -102,7 +115,8 @@ class MyProfile extends React.Component {
                 handleCreate={this.handleCreate}
                 toggleModal={this.toggleModal}
                 loading={this.state.loading}
-                birthdate={user.birthdate}
+                picture={this.state.picture}
+                handleUpdateUserPhoto={this.handleUpdateUserPhoto}
                 skills={this.state.skillsTemp}
               />
               <Card
@@ -114,7 +128,7 @@ class MyProfile extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <img
-                    src={user.picture}
+                    src={this.state.picture}
                     alt="avatar"
                     className="rounded-circle"
                     width="120"

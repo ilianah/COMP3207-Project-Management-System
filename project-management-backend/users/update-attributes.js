@@ -11,7 +11,7 @@ module.exports.handler = async event => {
   try {
     event.body = JSON.parse(event.body);
     let skills = event.body.skills;
-    let birthdate = event.body.birthdate;
+    let picture = event.body.picture;
     let res = await cognitoClient
       .adminUpdateUserAttributes({
         UserAttributes: [
@@ -20,8 +20,8 @@ module.exports.handler = async event => {
             Value: skills
           },
           {
-            Name: "birthdate",
-            Value: birthdate
+            Name: "picture",
+            Value: picture
           }
         ],
         UserPoolId: "us-east-1_p4KcysLln",

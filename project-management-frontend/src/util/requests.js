@@ -62,9 +62,9 @@ export let getSkills = (token, username) =>
     ...getHeaders(token)
   }).then(res => res.json());
 
-export let updateProfile = (token, username, skills, birthdate) =>
+export let updateProfile = (token, username, skills, picture) =>
   fetch(`${BASE_URL}profile/${username}`, {
     method: "PUT",
     ...getHeaders(token),
-    body: JSON.stringify({ skills, birthdate })
+    body: JSON.stringify({ skills, picture })
   }).then(res => res.json());
