@@ -59,6 +59,8 @@ class App extends React.Component {
               path="/home"
               exact
               render={props => {
+                if (!this.state.loggingIn && !this.state.loggedIn)
+                  return <Redirect to="/" />;
                 return (
                   <Home {...this.state} {...props} doLogout={this.logout} />
                 );
@@ -85,9 +87,17 @@ class App extends React.Component {
               path="/users"
               exact
               render={props => {
-                if (!this.state.loggingIn && !this.state.loggedIn)
+                if (
+                  !this.state.loggingIn &&
+                  (!this.state.loggedIn ||
+                    (this.state.token && this.state.role !== "Admin"))
+                )
                   return <Redirect to="/" />;
-                if (this.state.loggedIn && this.state.token)
+                if (
+                  this.state.loggedIn &&
+                  this.state.token &&
+                  this.state.role === "Admin"
+                )
                   return (
                     <Users {...this.state} {...props} doLogout={this.logout} />
                   );

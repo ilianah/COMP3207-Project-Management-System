@@ -41,14 +41,13 @@ class MNavbar extends React.Component {
                   Projects
                 </NavLink>
               </NavItem>
-              {role &&
-                role.includes("Admin") && (
-                  <NavItem>
-                    <NavLink className="nav-link" to="/users">
-                      Users
-                    </NavLink>
-                  </NavItem>
-                )}
+              {role && role.includes("Admin") && (
+                <NavItem>
+                  <NavLink className="nav-link" to="/users">
+                    Users
+                  </NavLink>
+                </NavItem>
+              )}
             </Nav>
           </Collapse>
           <Collapse isOpen={this.state.isOpen} navbar>
@@ -62,11 +61,9 @@ class MNavbar extends React.Component {
                     <DropdownItem to={`/ ${username}`}>My Profile</DropdownItem>
                   </Link>
                   <DropdownItem divider />
-                  <DropdownItem>
-                    <NavLink className="nav-link" onClick={doLogout} to="/">
-                      Logout
-                    </NavLink>
-                  </DropdownItem>
+                  <Link onClick={doLogout} to="/">
+                    <DropdownItem>Logout</DropdownItem>
+                  </Link>
                 </DropdownMenu>
               </UncontrolledDropdown>
             </Nav>
