@@ -6,6 +6,7 @@ import {
   Switch
 } from "react-router-dom";
 import Login from "./Login";
+import SignUp from "./SignUp";
 import Splash from "./Splash";
 import Home from "./Home";
 import ProjectsList from "./ProjectsList";
@@ -13,6 +14,7 @@ import Users from "./Users";
 import CreateProject from "./CreateProject";
 import MyProfile from "./MyProfile";
 import { CognitoUserPool } from "amazon-cognito-identity-js";
+import VerificationCode from "./VerificationCode";
 
 class App extends React.Component {
   state = { loggingIn: true, loggedIn: false };
@@ -129,7 +131,25 @@ class App extends React.Component {
               path="/login"
               exact
               render={props => {
+                if (this.state.loggedIn && this.state.token)
+                  return <Redirect to="/" />;
                 return <Login login={this.login} {...props} />;
+              }}
+            />
+            <Route
+              path="/signup"
+              exact
+              render={props => {
+                if (this.state.loggedIn && this.state.token)
+                  return <Redirect to="/" />;
+                return <SignUp signup={this.signup} {...props} />;
+              }}
+            />
+            <Route
+              path="/code"
+              exact
+              render={props => {
+                return <VerificationCode {...props} />;
               }}
             />
             <Route
@@ -168,17 +188,10 @@ class App extends React.Component {
   };
 
   signup = () => {
-    window.location = encodeURI(
-      `https://projectmanagement.auth.us-east-1.amazoncognito.com/signup?redirect_uri=${
-        process.env.REACT_APP_REDIRECT_URI
-      }&response_type=token&client_id=${
-        process.env.REACT_APP_CLIENT_ID
-      }&scope=phone email openid aws.cognito.signin.user.admin profile`
-    );
+    window.location = "/signup";
   };
 
   login = session => {
-    console.log(session);
     this.setState({
       token: session.idToken.jwtToken,
       role: session.idToken.payload["cognito:groups"],
