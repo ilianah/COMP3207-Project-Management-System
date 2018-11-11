@@ -3,13 +3,14 @@ import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { FaArrowRight, FaTimes, FaSpinner } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
-import SignUpErrorModal from "./signup/SignUpErrorModal";
+import VerificationErrorModal from "./signup/VerificationErrorModal";
 import { Redirect } from "react-router-dom";
 
 class VerificationCode extends React.Component {
   state = {
     verifying: false,
-    code: ""
+    code: "",
+    modal: false
   };
 
   render() {
@@ -35,7 +36,7 @@ class VerificationCode extends React.Component {
           </span>
         )}
         {this.state.error && (
-          <SignUpErrorModal
+          <VerificationErrorModal
             error={this.state.error}
             modal={this.state.modal}
             onError={this.onError}
@@ -94,6 +95,12 @@ class VerificationCode extends React.Component {
     });
   };
 
+  onError = () => {
+    this.setState({
+      modal: !this.state.modal
+    });
+  };
+
   authenticating = e => {
     this.setState({ verifying: true });
     e.preventDefault();
@@ -115,11 +122,10 @@ class VerificationCode extends React.Component {
       this.setState({ verifying: false });
       if (err) {
         console.log(err.message || JSON.stringify(err));
-        this.setState({ error: err });
+        this.setState({ error: err, modal: true });
         return;
       }
-
-      this.setState({ verified: true });
+      this.setState({ verified: true, modal: false });
     });
   };
 }

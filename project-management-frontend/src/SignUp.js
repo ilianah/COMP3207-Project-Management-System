@@ -154,6 +154,7 @@ class SignUp extends React.Component {
       repeatedPassword: e.target.value
     });
   };
+
   onError = () => {
     this.setState({
       modal: !this.state.modal
