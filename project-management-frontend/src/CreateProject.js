@@ -97,7 +97,7 @@ export default class CreateProject extends React.Component {
       </div>
     );
 
-    let successMessage = (
+    let SuccessMessage = () => (
       <div className="message">
         <Alert color="success">
           <h4 className="alert-heading">Success!</h4>
@@ -135,7 +135,7 @@ export default class CreateProject extends React.Component {
           {!this.state.loading && !this.state.usersLoading && (
             <div className="form-box">
               {this.state.validationSuccess ? (
-                { successMessage }
+                <SuccessMessage />
               ) : (
                 <React.Fragment>
                   {this.state.validationErrors &&

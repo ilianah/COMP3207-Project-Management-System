@@ -1,68 +1,35 @@
 import React from "react";
-import { CognitoAuth } from "amazon-cognito-auth-js";
 import {
   BrowserRouter as Router,
   Route,
   Redirect,
   Switch
 } from "react-router-dom";
+import Login from "./Login";
 import Splash from "./Splash";
 import Home from "./Home";
 import ProjectsList from "./ProjectsList";
 import Users from "./Users";
 import CreateProject from "./CreateProject";
 import MyProfile from "./MyProfile";
-
-const authData = {
-  ClientId: "1nc0sof19hqvahp196dgc7g0bc",
-  AppWebDomain: "projectmanagement.auth.us-east-1.amazoncognito.com",
-  TokenScopesArray: [
-    "phone",
-    "email",
-    "openid",
-    "aws.cognito.signin.user.admin",
-    "profile"
-  ],
-  RedirectUriSignIn: "http://localhost:3000",
-  RedirectUriSignOut: "http://localhost:3000"
-};
+import { CognitoUserPool } from "amazon-cognito-identity-js";
 
 class App extends React.Component {
-  state = { loggingIn: true };
-  auth = new CognitoAuth(authData);
+  state = { loggingIn: true, loggedIn: false };
 
   componentDidMount() {
-    this.auth.userhandler = {
-      onSuccess: result => {
-        let role = this.auth.getCachedSession().accessToken.payload[
-          "cognito:groups"
-        ];
-
-        let username = this.auth.username;
-        this.setState({
-          token: result.idToken.jwtToken,
-          role,
-          username,
-          loggingIn: false
-        });
-      },
-
-      onFailure: err => {
-        this.setState({
-          loggedIn: false,
-          role: undefined,
-          username: undefined,
-          loggingIn: false
-        });
-      }
+    let poolData = {
+      UserPoolId: "us-east-1_p4KcysLln",
+      ClientId: process.env.REACT_APP_CLIENT_ID
     };
+    this.userPool = new CognitoUserPool(poolData);
+    let cognitoUser = this.userPool.getCurrentUser();
 
-    if (this.auth.getCachedSession().isValid()) {
-      this.auth.userhandler.onSuccess(this.auth.getCachedSession());
+    if (cognitoUser) {
+      cognitoUser.getSession((err, session) => {
+        if (session && session.isValid()) this.login(session);
+      });
     }
-
-    let curUrl = window.location.href;
-    this.auth.parseCognitoWebResponse(curUrl);
 
     setTimeout(() => {
       if (!this.state.loggedIn) {
@@ -80,19 +47,12 @@ class App extends React.Component {
               path="/"
               exact
               render={props => {
-                if (this.auth.isUserSignedIn()) {
+                if (this.state.loggedIn) {
                   return <Redirect to="/home" />;
                 }
-                return (
-                  <Splash
-                    {...props}
-                    doLogin={this.login}
-                    doSignup={this.signup}
-                  />
-                );
+                return <Splash {...props} doSignup={this.signup} />;
               }}
             />
-
             <Route
               path="/home"
               exact
@@ -102,14 +62,13 @@ class App extends React.Component {
                 );
               }}
             />
-
             <Route
               path="/projects"
               exact
               render={props => {
-                if (!this.state.loggingIn && !this.auth.isUserSignedIn())
+                if (!this.state.loggingIn && !this.state.loggedIn)
                   return <Redirect to="/" />;
-                if (this.auth.isUserSignedIn() && this.state.token)
+                if (this.state.loggedIn && this.state.token)
                   return (
                     <ProjectsList
                       {...this.state}
@@ -120,28 +79,26 @@ class App extends React.Component {
                 return null;
               }}
             />
-
             <Route
               path="/users"
               exact
               render={props => {
-                if (!this.state.loggingIn && !this.auth.isUserSignedIn())
+                if (!this.state.loggingIn && !this.state.loggedIn)
                   return <Redirect to="/" />;
-                if (this.auth.isUserSignedIn() && this.state.token)
+                if (this.state.loggedIn && this.state.token)
                   return (
                     <Users {...this.state} {...props} doLogout={this.logout} />
                   );
                 return null;
               }}
             />
-
             <Route
               path="/users/:username?"
               exact
               render={props => {
-                if (!this.state.loggingIn && !this.auth.isUserSignedIn())
+                if (!this.state.loggingIn && !this.state.loggedIn)
                   return <Redirect to="/" />;
-                if (this.auth.isUserSignedIn() && this.state.token)
+                if (this.state.loggedIn && this.state.token)
                   return (
                     <MyProfile
                       {...this.state}
@@ -152,13 +109,12 @@ class App extends React.Component {
                 return null;
               }}
             />
-
             <Route
               path="/projects/create/:status?"
               render={props => {
-                if (!this.state.loggingIn && !this.auth.isUserSignedIn())
+                if (!this.state.loggingIn && !this.state.loggedIn)
                   return <Redirect to="/" />;
-                if (this.auth.isUserSignedIn() && this.state.token)
+                if (this.state.loggedIn && this.state.token)
                   return (
                     <CreateProject
                       {...this.state}
@@ -169,13 +125,19 @@ class App extends React.Component {
                 return null;
               }}
             />
-
+            <Route
+              path="/login"
+              exact
+              render={props => {
+                return <Login login={this.login} {...props} />;
+              }}
+            />
             <Route
               path="/projects/update/:id"
               render={props => {
-                if (!this.state.loggingIn && !this.auth.isUserSignedIn())
+                if (!this.state.loggingIn && !this.state.loggedIn)
                   return <Redirect to="/" />;
-                if (this.auth.isUserSignedIn() && this.state.token)
+                if (this.state.loggedIn && this.state.token)
                   return (
                     <CreateProject
                       {...this.state}
@@ -186,7 +148,6 @@ class App extends React.Component {
                 return null;
               }}
             />
-
             {
               <Route
                 render={props => {
@@ -194,23 +155,37 @@ class App extends React.Component {
                 }}
               />
             }
+            />
           </Switch>
         </div>
       </Router>
     );
   }
 
-  login = () => {
-    this.auth.getSession();
-  };
-
   logout = () => {
-    this.auth.signOut();
+    this.userPool.getCurrentUser().signOut();
+    this.setState({ loggedIn: false, token: null });
   };
 
   signup = () => {
-    window.location =
-      "https://projectmanagement.auth.us-east-1.amazoncognito.com/signup?redirect_uri=http%3A%2F%2Flocalhost%3A3000&response_type=token&client_id=1nc0sof19hqvahp196dgc7g0bc&state=XT66S2tjWJaMq7STToBTdrg9C496Q1pj&scope=phone%20email%20openid%20aws.cognito.signin.user.admin%20profile";
+    window.location = encodeURI(
+      `https://projectmanagement.auth.us-east-1.amazoncognito.com/signup?redirect_uri=${
+        process.env.REACT_APP_REDIRECT_URI
+      }&response_type=token&client_id=${
+        process.env.REACT_APP_CLIENT_ID
+      }&scope=phone email openid aws.cognito.signin.user.admin profile`
+    );
+  };
+
+  login = session => {
+    console.log(session);
+    this.setState({
+      token: session.idToken.jwtToken,
+      role: session.idToken.payload["cognito:groups"],
+      username: session.idToken.payload["cognito:username"],
+      loggingIn: false,
+      loggedIn: true
+    });
   };
 }
 
