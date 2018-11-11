@@ -7,7 +7,7 @@ import {
   FaLightbulb,
   FaSitemap
 } from "react-icons/fa";
-import { getUser, updateRole } from "./requests";
+import { getUser, updateRole } from "./util/requests";
 import UserCardModal from "./user/UserCardModal";
 import UserCardEmailButton from "./user/UserCardEmailButton";
 import UserCardChangeRoleButton from "./user/UserCardChangeRoleButton";

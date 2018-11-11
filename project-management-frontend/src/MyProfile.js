@@ -18,7 +18,7 @@ import {
   FaLightbulb
 } from "react-icons/fa";
 import MNavbar from "./MNavbar";
-import { getUsers, getSkills, updateProfile } from "./requests";
+import { getUsers, getSkills, updateProfile } from "./util/requests";
 import MyProfileModal from "./user/MyProfileModal";
 
 class MyProfile extends React.Component {
@@ -74,6 +74,8 @@ class MyProfile extends React.Component {
   };
 
   render() {
+    console.log(this.state.userloading);
+    console.log(this.state.skillsloading);
     const { role, username } = this.props;
     let user = this.state.user[0];
     let hasSkills = this.state.skills !== "";
@@ -88,76 +90,75 @@ class MyProfile extends React.Component {
         <div className="background ">
           <div className="header" />
 
-          {(this.state.userloading || this.state.skillsloading) && (
-            <Loader loaded={!this.state.loading} />
-          )}
+          <Loader
+            loaded={!(this.state.userloading || this.state.skillsloading)}
+          />
 
-          {!this.state.userloading &&
-            !this.state.skillsloading && (
-              <Col className="text-center" md={{ size: 4, offset: 4 }} sm="12">
-                <MyProfileModal
-                  modal={this.state.modal}
-                  onUpdateProfile={this.onUpdateProfile}
-                  handleCreate={this.handleCreate}
-                  toggleModal={this.toggleModal}
-                  loading={this.state.loading}
-                  birthdate={user.birthdate}
-                  skills={this.state.skillsTemp}
-                />
-                <Card
-                  className="mt-3 ml-3 mr-3 mb-3"
-                  style={{ backgroundColor: "rgba(255,255,255,0.5)" }}
-                >
-                  <CardHeader className="text-center">
-                    <h3>{user.name}</h3>
-                  </CardHeader>
-                  <CardBody>
-                    <img
-                      src={user.picture}
-                      alt="avatar"
-                      className="rounded-circle"
-                      width="120"
-                      height="120"
-                    />
-                    <h5>
-                      <FaUser /> {user.username}
-                    </h5>
-                    <h5>
-                      <FaSitemap /> {role}
-                    </h5>
-                    <h5>
-                      <FaLightbulb />
-                      {!hasSkills && <i>You have no added skills</i>}
-                      {hasSkills && this.state.skills}
-                    </h5>
-                    <h5>
-                      <FaEnvelope /> {user.email}
-                    </h5>
-                    <h5>
-                      <FaBirthdayCake /> {user.birthdate}
-                    </h5>
-                  </CardBody>
-                  <CardFooter>
-                    <Button
-                      id={"edit-" + username}
-                      color="link"
-                      size="lg"
-                      style={{ color: "black" }}
-                      className="p-1 mt-0"
-                      onClick={this.toggleModal}
+          {!this.state.userloading && !this.state.skillsloading && (
+            <Col className="text-center" md={{ size: 4, offset: 4 }} sm="12">
+              <MyProfileModal
+                modal={this.state.modal}
+                onUpdateProfile={this.onUpdateProfile}
+                handleCreate={this.handleCreate}
+                toggleModal={this.toggleModal}
+                loading={this.state.loading}
+                birthdate={user.birthdate}
+                skills={this.state.skillsTemp}
+              />
+              <Card
+                className="mt-3 ml-3 mr-3 mb-3"
+                style={{ backgroundColor: "rgba(255,255,255,0.5)" }}
+              >
+                <CardHeader className="text-center">
+                  <h3>{user.name}</h3>
+                </CardHeader>
+                <CardBody>
+                  <img
+                    src={user.picture}
+                    alt="avatar"
+                    className="rounded-circle"
+                    width="120"
+                    height="120"
+                  />
+                  <h5>
+                    <FaUser /> {user.username}
+                  </h5>
+                  <h5>
+                    <FaSitemap /> {role}
+                  </h5>
+                  <h5>
+                    <FaLightbulb />
+                    {!hasSkills && <i>You have no added skills</i>}
+                    {hasSkills && this.state.skills}
+                  </h5>
+                  <h5>
+                    <FaEnvelope /> {user.email}
+                  </h5>
+                  <h5>
+                    <FaBirthdayCake /> {user.birthdate}
+                  </h5>
+                </CardBody>
+                <CardFooter>
+                  <Button
+                    id={"edit-" + username}
+                    color="link"
+                    size="lg"
+                    style={{ color: "black" }}
+                    className="p-1 mt-0"
+                    onClick={this.toggleModal}
+                  >
+                    <FaEdit />
+                    <UncontrolledTooltip
+                      placement="top"
+                      target={"edit-" + username}
                     >
-                      <FaEdit />
-                      <UncontrolledTooltip
-                        placement="top"
-                        target={"edit-" + username}
-                      >
-                        Update Skills
-                      </UncontrolledTooltip>
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </Col>
-            )}
+                      Update Skills
+                    </UncontrolledTooltip>
+                  </Button>
+                </CardFooter>
+              </Card>
+            </Col>
+          )}
         </div>
       </Fragment>
     );

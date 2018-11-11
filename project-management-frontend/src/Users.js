@@ -4,7 +4,7 @@ import UserCard from "./UserCard";
 import { Row } from "reactstrap";
 import Loader from "react-loader";
 import Searchbar from "./Searchbar";
-import { getUsers, deleteUser } from "./requests";
+import { getUsers, deleteUser } from "./util/requests";
 
 export default class Users extends React.Component {
   state = {

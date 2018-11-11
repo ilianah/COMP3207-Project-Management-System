@@ -9,7 +9,7 @@ import {
   updateProject,
   deleteProject,
   getUsers
-} from "./requests";
+} from "./util/requests";
 
 export default class ProjectsList extends React.Component {
   state = {
@@ -46,7 +46,7 @@ export default class ProjectsList extends React.Component {
           role={role}
           username={username}
         />
-        {this.state.loading && <Loader loaded={!this.state.loading} />}
+        <Loader loaded={!this.state.loading} />
 
         <div className="background " />
 
