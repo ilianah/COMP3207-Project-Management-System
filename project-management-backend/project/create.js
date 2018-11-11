@@ -1,5 +1,4 @@
 "use strict";
-require;
 
 let AWS = require("aws-sdk");
 let uuid = require("uuid");
