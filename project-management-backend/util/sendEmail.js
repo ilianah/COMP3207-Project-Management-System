@@ -1,8 +1,7 @@
 let AWS = require("aws-sdk");
 
-module.exports.sendEmail = (email, body, subject) => {
-  let ses = new AWS.SES();
-  let params = {
+let getEmailParams = (email, body, subject) => {
+  return {
     Destination: {
       ToAddresses: [email]
     },
@@ -20,6 +19,12 @@ module.exports.sendEmail = (email, body, subject) => {
     },
     Source: "ilianahadzhiatanasova@gmail.com"
   };
+};
 
+module.exports.getEmailParams = getEmailParams;
+
+module.exports.sendEmail = (email, body, subject) => {
+  let ses = new AWS.SES();
+  let params = getEmailParams(email, body, subject);
   return ses.sendEmail(params).promise();
 };
