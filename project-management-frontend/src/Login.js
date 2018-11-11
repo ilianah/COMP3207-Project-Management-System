@@ -14,7 +14,7 @@ import {
   CognitoUserPool,
   CognitoUser
 } from "amazon-cognito-identity-js";
-import LoginErrorModal from "./login/LoginErrorModal";
+import LoginErrorModal from "./auth/login/LoginErrorModal";
 
 class Login extends React.Component {
   state = {

@@ -166,7 +166,7 @@ class MyProfile extends React.Component {
                       placement="top"
                       target={"edit-" + username}
                     >
-                      Update Skills
+                      Update Profile
                     </UncontrolledTooltip>
                   </Button>
                 </CardFooter>

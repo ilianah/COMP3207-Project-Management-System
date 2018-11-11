@@ -3,7 +3,7 @@ import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { FaArrowRight, FaTimes, FaSpinner } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
-import VerificationErrorModal from "./signup/VerificationErrorModal";
+import VerificationErrorModal from "./auth/signup/VerificationErrorModal";
 import { Redirect } from "react-router-dom";
 
 class VerificationCode extends React.Component {

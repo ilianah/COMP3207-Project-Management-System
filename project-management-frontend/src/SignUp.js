@@ -6,13 +6,12 @@ import {
   CognitoUserPool,
   CognitoUserAttribute
 } from "amazon-cognito-identity-js";
-import SignUpErrorModal from "./signup/SignUpErrorModal";
-import SignUpUsernameField from "./signup/SignUpUsernameField";
-import SignUpPasswordField from "./signup/SignUpPasswordField";
-import SignUpNameField from "./signup/SignUpNameField";
-import SignUpEmailField from "./signup/SignUpEmailField";
-import SignUpBirthdayField from "./signup/SignUpBirthdayField";
-import SignUpPictureField from "./signup/SignUpPictureField";
+import SignUpErrorModal from "./auth/signup/SignUpErrorModal";
+import SignUpUsernameField from "./auth/signup/SignUpUsernameField";
+import SignUpPasswordField from "./auth/signup/SignUpPasswordField";
+import SignUpNameField from "./auth/signup/SignUpNameField";
+import SignUpEmailField from "./auth/signup/SignUpEmailField";
+import SignUpBirthdayField from "./auth/signup/SignUpBirthdayField";
 import VerificationCode from "./VerificationCode";
 
 class SignUp extends React.Component {
@@ -21,8 +20,6 @@ class SignUp extends React.Component {
     username: "",
     birthdate: "",
     name: "",
-    picture:
-      "https://cdn.pixabay.com/photo/2012/04/26/19/43/profile-42914_960_720.png",
     email: "",
     password: "",
     repeatedPassword: "",
@@ -101,10 +98,7 @@ class SignUp extends React.Component {
                 handleBirthdateInput={this.handleBirthdateInput}
                 birthdate={this.state.birthdate}
               />
-              <SignUpPictureField
-                handlePictureInput={this.handlePictureInput}
-                picture={this.state.picture}
-              />
+
               <br />
               <div>
                 <CancelButton />
@@ -137,9 +131,6 @@ class SignUp extends React.Component {
     this.setState({ name: e.target.value });
   };
 
-  handlePictureInput = e => {
-    this.setState({ picture: e.target.value });
-  };
   handleEmailInput = e => {
     this.setState({ email: e.target.value });
   };
@@ -183,7 +174,8 @@ class SignUp extends React.Component {
 
     let userPicture = {
       Name: "picture",
-      Value: this.state.picture
+      Value:
+        "https://vignette.wikia.nocookie.net/bungostraydogs/images/1/1e/Profile-icon-9.png/revision/latest?cb=20171030104015"
     };
     let userEmail = {
       Name: "email",
