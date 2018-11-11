@@ -14,6 +14,7 @@ import Select from "react-select";
 
 let ConfirmButton = ({ createProject }) => (
   <Button
+    type="submit"
     color="success"
     size="l"
     onClick={createProject}
@@ -25,7 +26,7 @@ let ConfirmButton = ({ createProject }) => (
 
 let CancelButton = () => (
   <Link to="/projects">
-    <Button color="danger" size="l" className="mt-3 mb-3 mr-2">
+    <Button type="button" color="danger" size="l" className="mt-3 mb-3 mr-2">
       <FaTimes /> Cancel
     </Button>
   </Link>

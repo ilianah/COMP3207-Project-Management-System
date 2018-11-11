@@ -49,6 +49,7 @@ export default ({
     </ModalBody>
     <ModalFooter>
       <Button
+        type="button"
         color="danger"
         size="l"
         className="mt-3 mb-3 mr-2"
@@ -57,6 +58,7 @@ export default ({
         <FaTimes /> Cancel
       </Button>
       <Button
+        type="submit"
         color="success"
         size="l"
         className="mt-3 mb-3 ml-2"
