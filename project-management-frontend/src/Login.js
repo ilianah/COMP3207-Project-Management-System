@@ -14,16 +14,19 @@ import {
   CognitoUserPool,
   CognitoUser
 } from "amazon-cognito-identity-js";
-import Loader from "react-loader";
+import LoginErrorModal from "./login/LoginErrorModal";
 
 class Login extends React.Component {
   state = {
     username: "",
-    password: ""
+    password: "",
+    modal: false
   };
   render() {
     let LoginButton = () => (
       <Button
+        type="submit"
+        id="login"
         color="success"
         size="l"
         onClick={this.login}
@@ -39,12 +42,24 @@ class Login extends React.Component {
             Logging you in... <FaSpinner />{" "}
           </span>
         )}
+        {this.state.error && (
+          <LoginErrorModal
+            error={this.state.error}
+            modal={this.state.modal}
+            onError={this.onError}
+          />
+        )}
       </Button>
     );
 
     let CancelButton = () => (
       <Link to="/">
-        <Button color="danger" size="l" className="mt-3 mb-3 mr-2">
+        <Button
+          type="button"
+          color="danger"
+          size="l"
+          className="mt-3 mb-3 mr-2"
+        >
           <FaTimes /> Cancel
         </Button>
       </Link>
@@ -62,15 +77,19 @@ class Login extends React.Component {
               <Input
                 type="text"
                 onChange={this.handleUsernameInput}
-                name="name"
+                username="name"
+                valid={this.isValidInput(this.state.username)}
               />
-              <FormFeedback invalid="false" />
             </FormGroup>
             <FormGroup style={{ width: "30%", margin: "5px auto" }}>
               <Label for="description">
                 <b>Password</b>
               </Label>
-              <Input type="password" onChange={this.handlePasswordInput} />
+              <Input
+                type="password"
+                onChange={this.handlePasswordInput}
+                valid={this.isValidInput(this.state.password)}
+              />
               <FormFeedback invalid="true" />
             </FormGroup>
             <br />
@@ -92,6 +111,16 @@ class Login extends React.Component {
     this.setState({
       password: e.target.value
     });
+  };
+
+  onError = () => {
+    this.setState({
+      modal: !this.state.modal
+    });
+  };
+
+  isValidInput = input => {
+    return input.length > 0;
   };
 
   login = () => {
@@ -125,9 +154,7 @@ class Login extends React.Component {
         }
       },
       onFailure: err => {
-        this.setState({ loggingIn: false, error: err });
-        console.log(err);
-        console.log(err.message || JSON.stringify(err));
+        this.setState({ loggingIn: false, error: err, modal: true });
       }
     });
   };
