@@ -67,7 +67,7 @@ export default class CreateProject extends React.Component {
       if (this.props.match.params.id) {
         getProjects(this.props.token).then(pRes => {
           let project = pRes.find(p => p.id === this.props.match.params.id);
-          project.owner = pRes.map(u => u.username).includes(project.owner)
+          project.owner = res.map(u => u.username).includes(project.owner)
             ? project.owner
             : this.props.username;
           project.owner = { label: project.owner, value: project.owner };
@@ -243,7 +243,8 @@ export default class CreateProject extends React.Component {
   /**
    * Send a POST request to the API to create or update the project
    */
-  createProject = () => {
+  createProject = e => {
+    e.preventDefault();
     let { name, description, owner, assignees, status, id } = this.state;
     owner = owner.value;
     assignees = assignees.map(a => a.value);
