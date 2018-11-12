@@ -2,6 +2,10 @@ import React from "react";
 import { Button } from "reactstrap";
 import { Link } from "react-router-dom";
 
+/**
+ * Splash page that will be visible to anyone trying to access the website
+ * Giving the options to login or signup to the application 
+ */
 export default ({ doSignup }) => {
   return (
     <div className="background">

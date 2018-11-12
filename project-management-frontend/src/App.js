@@ -16,9 +16,17 @@ import MyProfile from "./MyProfile";
 import { CognitoUserPool } from "amazon-cognito-identity-js";
 import VerificationCode from "./VerificationCode";
 
+/**
+ * Dealing with routing - matches the path parameters and redirects to a specific component
+ * upon specifying a specific path
+ * When redirecting to pages it is checked whether a user is logged in, so that unauthenticated users
+ * are not allowed access to resources within the application;
+ * Non-existing pages are also handled by redirecting to the home page if a specific url doesn't exist
+ */
 class App extends React.Component {
   state = { loggingIn: true, loggedIn: false };
 
+  // Initialise the user pool and get the current user
   componentDidMount() {
     let poolData = {
       UserPoolId: "us-east-1_p4KcysLln",
@@ -27,6 +35,7 @@ class App extends React.Component {
     this.userPool = new CognitoUserPool(poolData);
     let cognitoUser = this.userPool.getCurrentUser();
 
+    // If the user exists, the session is valid and the user is logged in
     if (cognitoUser) {
       cognitoUser.getSession((err, session) => {
         if (session && session.isValid()) this.login(session);
@@ -90,13 +99,13 @@ class App extends React.Component {
                 if (
                   !this.state.loggingIn &&
                   (!this.state.loggedIn ||
-                    (this.state.token && this.state.role !== "Admin"))
+                    (this.state.token && !this.state.role.includes("Admin")))
                 )
                   return <Redirect to="/" />;
                 if (
                   this.state.loggedIn &&
                   this.state.token &&
-                  this.state.role === "Admin"
+                  this.state.role.includes("Admin")
                 )
                   return (
                     <Users {...this.state} {...props} doLogout={this.logout} />
@@ -124,7 +133,13 @@ class App extends React.Component {
             <Route
               path="/projects/create/:status?"
               render={props => {
-                if (!this.state.loggingIn && !this.state.loggedIn)
+                if (
+                  !this.state.loggingIn &&
+                  (!this.state.loggedIn ||
+                    (this.state.token &&
+                      (!this.state.role.includes("Admin") &&
+                        !this.state.role.includes("ProjectManager"))))
+                )
                   return <Redirect to="/" />;
                 if (this.state.loggedIn && this.state.token)
                   return (
@@ -159,13 +174,21 @@ class App extends React.Component {
               path="/code"
               exact
               render={props => {
+                if (this.state.loggedIn && this.state.token)
+                  return <Redirect to="/" />;
                 return <VerificationCode {...props} />;
               }}
             />
             <Route
               path="/projects/update/:id"
               render={props => {
-                if (!this.state.loggingIn && !this.state.loggedIn)
+                if (
+                  !this.state.loggingIn &&
+                  (!this.state.loggedIn ||
+                    (this.state.token &&
+                      (!this.state.role.includes("Admin") &&
+                        !this.state.role.includes("ProjectManager"))))
+                )
                   return <Redirect to="/" />;
                 if (this.state.loggedIn && this.state.token)
                   return (
@@ -192,23 +215,35 @@ class App extends React.Component {
     );
   }
 
+  // Signing out of the application and setting the token to null, so that there is no access to other pages
   logout = () => {
     this.userPool.getCurrentUser().signOut();
     this.setState({ loggedIn: false, token: null });
   };
 
+  // Redirect to the signup page
   signup = () => {
     window.location = "/signup";
   };
 
+  /**
+   * Set the state of the application to keep the information of the current user logged in;
+   * this will be used to give access to other pages in the application, which are not accessible
+   * otherwise
+   */
   login = session => {
-    this.setState({
-      token: session.idToken.jwtToken,
-      role: session.idToken.payload["cognito:groups"],
-      username: session.idToken.payload["cognito:username"],
-      loggingIn: false,
-      loggedIn: true
-    });
+    this.setState(
+      {
+        token: session.idToken.jwtToken,
+        role: session.idToken.payload["cognito:groups"],
+        username: session.idToken.payload["cognito:username"],
+        loggingIn: false,
+        loggedIn: true
+      },
+      () => {
+        console.log(this.state);
+      }
+    );
   };
 }
 

@@ -1,6 +1,9 @@
 import React from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
+/**
+ * Project Card modal containing all information about a project
+ */
 export default ({ project, statusColors, modal, className, onView }) => {
   return (
     <Modal

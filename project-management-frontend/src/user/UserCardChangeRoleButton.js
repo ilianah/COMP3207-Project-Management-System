@@ -2,6 +2,9 @@ import React from "react";
 import { Button, UncontrolledTooltip } from "reactstrap";
 import { FaEdit } from "react-icons/fa";
 
+/**
+ * Button to change the user role
+ */
 export default ({ user, onChangeRole }) => (
   <Button
     id={"edit-" + user.username}

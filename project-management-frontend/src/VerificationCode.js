@@ -6,6 +6,11 @@ import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
 import VerificationErrorModal from "./auth/signup/VerificationErrorModal";
 import { Redirect } from "react-router-dom";
 
+/**
+ * The component that handles verifying a user;
+ * Makes use of amazon-cognito-identity-js to confirm the
+ * verification code sent to the email of a recently created user
+ */
 class VerificationCode extends React.Component {
   state = {
     verifying: false,
@@ -13,6 +18,7 @@ class VerificationCode extends React.Component {
     modal: false
   };
 
+  // Once the user is verified they are redirected to the login page
   render() {
     if (this.state.verified) {
       return <Redirect to="/login" />;
@@ -45,6 +51,7 @@ class VerificationCode extends React.Component {
       </Button>
     );
 
+    // Cancelling would redirect to the splash page
     let CancelButton = () => (
       <Link to="/">
         <Button
@@ -85,22 +92,26 @@ class VerificationCode extends React.Component {
     );
   }
 
+  // Basic validation to check if the user has inputted anything
   validateCode = input => {
     return input.length > 0;
   };
 
+  // Update the state on user input
   handleCodeInput = e => {
     this.setState({
       code: e.target.value
     });
   };
 
+  // Toggle an error modal if there is an error
   onError = () => {
     this.setState({
       modal: !this.state.modal
     });
   };
 
+  // Authenticate the user
   authenticating = e => {
     this.setState({ verifying: true });
     e.preventDefault();

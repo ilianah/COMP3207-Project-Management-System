@@ -20,10 +20,14 @@ class StatusCol extends React.Component {
     selected: "all"
   };
 
+  /**
+   * Handle Viewing All and Viewing Assigned Projects by tracking the component state
+   */
   onRadioClick = selected => {
     this.setState({ selected });
   };
 
+  // Filter the projects according to the user's selection
   filterProjects = project => {
     if (this.state.selected === "assigned") {
       return (
@@ -37,6 +41,7 @@ class StatusCol extends React.Component {
   render() {
     const { status, role, connectDropTarget, isOver } = this.props;
 
+    // Change colour of the project card added to the new column
     return connectDropTarget(
       <div
         className="m-3 col"
@@ -104,17 +109,20 @@ class StatusCol extends React.Component {
     );
   }
 
+  // Change the status of the project
   addProject = item => {
     this.props.changeStatus(item, this.props.status);
   };
 }
 
+// Handle dragging
 let spec = {
   drop(props, monitor, component) {
     component.addProject(monitor.getItem());
   }
 };
 
+// Handle dragging
 let collect = (connect, monitor) => {
   return {
     connectDropTarget: connect.dropTarget(),

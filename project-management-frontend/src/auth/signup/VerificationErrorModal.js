@@ -1,6 +1,9 @@
 import React from "react";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 
+/**
+ * This is the modal to be triggered if there is a verification error.
+ */
 export default ({ modal, onError, error }) => {
   return (
     <Modal
@@ -12,9 +15,7 @@ export default ({ modal, onError, error }) => {
       <ModalHeader className="bg-danger text-white " toggle={onError}>
         Error verifying user
       </ModalHeader>
-      <ModalBody className="bg-danger text-white">
-        Please try again!{error.mesage}
-      </ModalBody>
+      <ModalBody className="bg-danger text-white">Please try again!</ModalBody>
     </Modal>
   );
 };

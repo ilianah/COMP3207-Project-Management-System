@@ -8,6 +8,9 @@ import {
 } from "reactstrap";
 import { FaTrash } from "react-icons/fa";
 
+/**
+ * Frontend elements for deleting a user
+ */
 export default ({ user, onPopover, removeUser, popover }) => (
   <Button
     id={"delete-" + user.username}

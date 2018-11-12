@@ -6,6 +6,9 @@ import CreatableSelect from "react-select/lib/Creatable";
 import { FaTimes, FaCheck } from "react-icons/fa";
 import UpdateUserPhoto from "./UpdateUserPhoto";
 
+/**
+ * A modal for updating the profile - holds information about the user skills and picture
+ */
 export default ({
   modal,
   onUpdateProfile,
@@ -21,7 +24,6 @@ export default ({
   if (skills.length > 0)
     skillsOptions = skills.split(",").map(e => ({ label: e, value: e }));
 
-  console.log(picture);
   return (
     <Modal isOpen={modal} toggle={toggleModal} target={"edit"}>
       <ModalHeader>

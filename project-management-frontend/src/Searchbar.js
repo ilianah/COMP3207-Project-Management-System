@@ -2,6 +2,9 @@ import React from "react";
 import { InputGroup, Row, Col } from "reactstrap";
 import { FaSearch } from "react-icons/fa";
 
+/**
+ * Search bar that will perform filtering on the frontend
+ */
 class Searchbar extends React.Component {
   render() {
     const value = this.props.value;

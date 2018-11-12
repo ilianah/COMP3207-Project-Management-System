@@ -11,12 +11,17 @@ import {
   getUsers
 } from "./util/requests";
 
+/**
+ * Display all projects in columns corresponding to their statuses
+ * Hold search filter information to filter projects by
+ */
 export default class ProjectsList extends React.Component {
   state = {
     projects: [],
     filter: ""
   };
 
+  // The state of the list should be loading
   componentDidMount() {
     this.setState({
       loading: true
@@ -83,6 +88,7 @@ export default class ProjectsList extends React.Component {
     );
   }
 
+  // Handle status changing when a project card is dragged into a different column
   changeStatus = (project, status) => {
     let newProject = { ...project, status };
     let projects = [...this.state.projects];
@@ -90,13 +96,16 @@ export default class ProjectsList extends React.Component {
     projects.push(newProject);
     this.setState({ projects });
 
+    // An API request should be sent to update the project with the new status
     updateProject(this.props.token, newProject);
   };
 
+  // Filtering the projects by search value
   onFilterChange = e => {
     this.setState({ filter: e.target.value.replace(/[^a-zA-Z0-9]/, "") });
   };
 
+  // API request to delete a project
   deleteProject = project => {
     let projects = [...this.state.projects];
     projects = projects.filter(p => p.id !== project.id);

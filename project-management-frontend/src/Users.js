@@ -6,6 +6,9 @@ import Loader from "react-loader";
 import Searchbar from "./Searchbar";
 import { getUsers, deleteUser } from "./util/requests";
 
+/**
+ * Fetches all the users and passes them down to UserCard
+ */
 export default class Users extends React.Component {
   state = {
     users: [],
@@ -13,6 +16,7 @@ export default class Users extends React.Component {
     filter: ""
   };
 
+  // Fetch all users when the component is mounted
   componentDidMount() {
     getUsers(this.props.token).then(res => {
       this.setState({
@@ -22,6 +26,7 @@ export default class Users extends React.Component {
     });
   }
 
+  // API request to delete user; only performable by an admin
   deleteUser = user => {
     if (this.props.role.includes("Admin")) {
       deleteUser(this.props.token, user.username).then(() => {
@@ -86,6 +91,7 @@ export default class Users extends React.Component {
     );
   }
 
+  // Handle search
   onFilterChange = e => {
     this.setState({ filter: e.target.value.replace(/[^a-zA-Z0-9]/, "") });
   };

@@ -12,6 +12,9 @@ import {
 import Select from "react-select";
 import { FaTimes, FaCheck } from "react-icons/fa";
 
+/**
+ * Modal that appears when an admin is to change a user role
+ */
 export default ({
   username,
   modal,
