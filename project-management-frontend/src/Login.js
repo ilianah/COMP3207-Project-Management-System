@@ -16,6 +16,10 @@ import {
 } from "amazon-cognito-identity-js";
 import LoginErrorModal from "./auth/login/LoginErrorModal";
 
+/**
+ * Custom Login Page that holds information for the username and password and makes use of amazon-cognito-identity-js
+ * to authenticate a user and log them in; A modal is shown in case there is an error with logging in
+ */
 class Login extends React.Component {
   state = {
     username: "",
@@ -103,6 +107,9 @@ class Login extends React.Component {
     );
   }
 
+  /**
+   * Handlers for username and password input
+   */
   handleUsernameInput = e => {
     this.setState({ username: e.target.value });
   };
@@ -113,16 +120,19 @@ class Login extends React.Component {
     });
   };
 
+  // Trigger the modal in case of an error
   onError = () => {
     this.setState({
       modal: !this.state.modal
     });
   };
 
+  // Check for valid input
   isValidInput = input => {
     return input.length > 0;
   };
 
+  // Use Cognito and the user's input to authenticate the user
   login = () => {
     let authData = {
       Username: this.state.username,
@@ -153,6 +163,7 @@ class Login extends React.Component {
           this.props.history.replace("/home");
         }
       },
+      // Trigger the modal if there is an error
       onFailure: err => {
         this.setState({ loggingIn: false, error: err, modal: true });
       }

@@ -1,13 +1,23 @@
-'use strict';
-let AWS = require('aws-sdk');
+"use strict";
+let AWS = require("aws-sdk");
 let documentClient = new AWS.DynamoDB.DocumentClient();
-let { respondWithHeaders, hasRole, permissionError } = require('../util/helpers');
+let {
+  respondWithHeaders,
+  hasRole,
+  permissionError
+} = require("../util/helpers");
 
+// Lambda to list all projects from DynamoDB
 module.exports.handler = async event => {
-  if (await hasRole(event, 'Admin') || await hasRole(event, 'Developer') || await hasRole(event, 'ProjectManager')) {
+  // All users have access to the projects
+  if (
+    (await hasRole(event, "Admin")) ||
+    (await hasRole(event, "Developer")) ||
+    (await hasRole(event, "ProjectManager"))
+  ) {
     try {
       let params = {
-        TableName: 'projects'
+        TableName: "projects"
       };
       let res = await documentClient.scan(params).promise();
       return respondWithHeaders(200, res.Items);

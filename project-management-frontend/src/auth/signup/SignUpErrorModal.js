@@ -1,6 +1,9 @@
 import React from "react";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 
+/**
+ * This is the modal to be triggered if there is a signup error.
+ */
 export default ({ modal, onError }) => {
   return (
     <Modal

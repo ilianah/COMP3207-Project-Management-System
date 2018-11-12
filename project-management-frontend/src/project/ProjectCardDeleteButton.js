@@ -8,6 +8,10 @@ import {
 } from "reactstrap";
 import { FaTrash } from "react-icons/fa";
 
+/**
+ * Button to delete a project with a tooltip;
+ * Has a popover to ask the user if they are sure they want to delete a project
+ */
 export default ({ project, onPopover, popover, removeProject }) => (
   <Button
     id={"delete-" + project.id}

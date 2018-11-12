@@ -3,6 +3,13 @@ let AWS = require("aws-sdk");
 let cognitoClient = new AWS.CognitoIdentityServiceProvider();
 let { respondWithHeaders } = require("../util/helpers");
 
+/*
+ * Lambda to list all users in groups;
+ * The function is called several times to return all users in the
+ * three existing cognito groups
+ * This makes role management easier and the users don't have to be pulled twice
+ * to get their roles
+ */
 module.exports.handler = async event => {
   try {
     let res1 = await cognitoClient

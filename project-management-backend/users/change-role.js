@@ -7,14 +7,18 @@ let {
   permissionError
 } = require("../util/helpers");
 
+// Lambda to change a user role
 module.exports.handler = async event => {
-  if (!await hasRole(event, "Admin")) return permissionError();
+  // Only Admins can change user roles
+  if (!(await hasRole(event, "Admin"))) return permissionError();
   try {
+    // Keep track of the old and the new role
     event.body = JSON.parse(event.body);
     let oldRole = event.body.oldRole;
 
     let newRole = event.body.newRole;
 
+    // Remove the user from the old group
     let res = await cognitoClient
       .adminRemoveUserFromGroup({
         GroupName: oldRole,
@@ -22,6 +26,8 @@ module.exports.handler = async event => {
         Username: event.pathParameters.username
       })
       .promise();
+
+    // Add the user to the new group
     let res2 = await cognitoClient
       .adminAddUserToGroup({
         GroupName: newRole,

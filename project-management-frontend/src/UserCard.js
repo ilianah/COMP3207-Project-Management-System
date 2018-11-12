@@ -13,6 +13,14 @@ import UserCardEmailButton from "./user/UserCardEmailButton";
 import UserCardChangeRoleButton from "./user/UserCardChangeRoleButton";
 import UserCardDeleteButton from "./user/UserCardDeleteButton";
 
+/**
+ * User card that displays all user attributes in a user card
+ * Provides the functionality of deleting a user; editing user role and
+ * sending an email to a specific user; The state holds information about the modal
+ * used for updating user role, as well as the new role assigned to a user;
+ * The component maintains the data about the old and then new role for a user in order to
+ * show live updates
+ */
 class UserCard extends React.Component {
   state = {
     popover: false,
@@ -21,10 +29,12 @@ class UserCard extends React.Component {
     newRole: ""
   };
 
+  // Toggle popovers
   onPopover = () => {
     this.setState({ popover: !this.state.popover });
   };
 
+  // Toggle modal
   onChangeRole = () => {
     this.getUserRole();
     this.setState({
@@ -32,6 +42,7 @@ class UserCard extends React.Component {
     });
   };
 
+  // Retrieve the user role from Cognito via a GET API request and update the component state
   getUserRole = () => {
     let { user } = this.props;
     if (this.props.role.includes("Admin")) {
@@ -45,6 +56,7 @@ class UserCard extends React.Component {
     }
   };
 
+  // Send a POST request to update a user attribute; this can only be done if the currently logged in user is an admin and update the state
   changeUserRole = () => {
     this.onChangeRole();
     let user = this.props.user;
@@ -65,8 +77,11 @@ class UserCard extends React.Component {
 
   render() {
     const { user } = this.props;
+
+    // Does a user have skills
     let hasSkills = typeof user.skills === "string";
 
+    // Regex for search highlighting
     let regex = new RegExp("(" + this.props.filter + ")", "i");
 
     return (
@@ -144,9 +159,12 @@ class UserCard extends React.Component {
     );
   }
 
+  // API request to delete a user
   removeUser = () => {
     this.props.deleteUser(this.props.project);
   };
+
+  // Update the component state when a user role is changed
   handleRoleChange = e => {
     this.setState({ roles: [e.value] });
   };

@@ -3,6 +3,9 @@ import { Button, UncontrolledTooltip } from "reactstrap";
 import ProjectCardModal from "./ProjectCardModal";
 import { FaEye } from "react-icons/fa";
 
+/**
+ * View Project button with a tooltip - opens a modal with more information about the project
+ */
 export default ({ project, statusColors, onView, modal, className }) => (
   <Button
     id={"view-" + project.id}

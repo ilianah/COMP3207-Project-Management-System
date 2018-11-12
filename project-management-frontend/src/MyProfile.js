@@ -21,6 +21,10 @@ import MNavbar from "./MNavbar";
 import { getUsers, getSkills, updateProfile } from "./util/requests";
 import MyProfileModal from "./user/MyProfileModal";
 
+/**
+ * The component that allows visualising the user information
+ * Keeps all user data in the state and displays it in an User Card
+ */
 class MyProfile extends React.Component {
   state = {
     user: [],
@@ -31,6 +35,7 @@ class MyProfile extends React.Component {
     modal: false
   };
 
+  // Get all users and filter the one that is currently signed in
   componentDidMount = () => {
     getUsers(this.props.token).then(res => {
       this.setState({
@@ -40,6 +45,7 @@ class MyProfile extends React.Component {
       });
     });
 
+    // Get the skills of the signed in user to display in the user card
     getSkills(this.props.token, this.props.username).then(res => {
       this.setState({
         skills: res.skills,
@@ -49,12 +55,17 @@ class MyProfile extends React.Component {
     });
   };
 
+  // Toggle the modal that allows the user to edit their profile;
+  // The state of the modal is kept in the state
   toggleModal = () => {
     this.setState({
       modal: !this.state.modal
     });
   };
 
+  /**
+   * Update the user profile with the new information provided
+   */
   onUpdateProfile = () => {
     updateProfile(
       this.props.token,
@@ -76,6 +87,9 @@ class MyProfile extends React.Component {
     this.toggleModal();
   };
 
+  /**
+   * Handlers for creating skills and updating photo (supports live updates)
+   */
   handleCreate = inputValue => {
     let skills = inputValue.map(s => s.value).join(",");
     this.setState({ skillsTemp: skills });
@@ -92,7 +106,6 @@ class MyProfile extends React.Component {
     let user = this.state.user[0];
     let hasSkills = this.state.skills !== "";
 
-    console.log(this.state.picture);
     return (
       <Fragment>
         <MNavbar
@@ -177,13 +190,6 @@ class MyProfile extends React.Component {
       </Fragment>
     );
   }
-
-  removeUser = () => {
-    this.props.deleteUser(this.props.project);
-  };
-  handleRoleChange = e => {
-    this.setState({ roles: [e.value] });
-  };
 }
 
 export default MyProfile;

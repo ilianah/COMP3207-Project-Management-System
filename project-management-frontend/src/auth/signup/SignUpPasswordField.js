@@ -1,14 +1,17 @@
 import React from "react";
 import { FormGroup, Input, Label, FormFeedback } from "reactstrap";
 
+// Validate that the user has inputed something
 let validate = input => {
   return input.length > 0;
 };
 
+// Compares two strings for equality - used to compare the 2 passwords
 let validatePassword = (input1, input2) => {
   return input1 === input2 && validate(input1);
 };
 
+// Fields for populating the password of a user that is signing up
 export default ({
   handlePasswordInput,
   handleRepeatedPasswordInput,

@@ -7,11 +7,14 @@ let {
   permissionError
 } = require("../util/helpers");
 
+// Lambda to delete users
 module.exports.handler = async event => {
-  if (!await hasRole(event, "Admin")) return permissionError();
+  // Only admins can delete users
+  if (!(await hasRole(event, "Admin"))) return permissionError();
   try {
     let res = await cognitoClient
 
+      // Delete the user from the userpool
       .adminDeleteUser({
         Username: event.pathParameters.username,
         UserPoolId: "us-east-1_p4KcysLln"

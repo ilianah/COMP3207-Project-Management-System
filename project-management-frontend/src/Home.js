@@ -1,9 +1,14 @@
 import React from "react";
 import MNavbar from "./MNavbar";
 
+/**
+ * Home page that is visible once the user has logged into the application;
+ * The component maintains a state that holds information about the quote being displayed
+ */
 export default class Home extends React.Component {
-  state = { quote: '' };
+  state = { quote: "" };
 
+  // Once the component mounts generate an initial quote and then refresh every 5000ms
   componentDidMount() {
     this.generateQuote();
     this.task = setInterval(this.generateQuote, 5000);
@@ -13,6 +18,7 @@ export default class Home extends React.Component {
     clearInterval(this.task);
   }
 
+  // Maintain information about the username of the currently logged in user to pass down to the NavBar
   render() {
     const { role, username } = this.props;
 
@@ -31,6 +37,7 @@ export default class Home extends React.Component {
     );
   }
 
+  // Quotes to be shown on the home page
   generateQuote = () => {
     let quotes = [
       "Let our advance worrying become advance thinking and planning. - Winston Churchill",
@@ -56,8 +63,8 @@ export default class Home extends React.Component {
       "Collaboration is the best way to work. It's only way to work, really. Everyone's there because they have a set of skills to offer across the board.- Antony Starr "
     ];
 
+    // Generate a random quote
     let randomQuote = Math.floor(Math.random() * 20);
-    this.setState({quote: quotes[randomQuote]});
+    this.setState({ quote: quotes[randomQuote] });
   };
-
 }

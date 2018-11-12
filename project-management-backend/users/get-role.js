@@ -7,10 +7,12 @@ let {
   permissionError
 } = require("../util/helpers");
 
+// Lambda to get a user's role
 module.exports.handler = async event => {
-  if (!await hasRole(event, "Admin")) return permissionError();
+  if (!(await hasRole(event, "Admin"))) return permissionError();
   try {
     let res = await cognitoClient
+      //List all groups for a user in a specific userpool
       .adminListGroupsForUser({
         UserPoolId: "us-east-1_p4KcysLln",
         Username: event.pathParameters.username

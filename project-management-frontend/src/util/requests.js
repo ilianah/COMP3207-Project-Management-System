@@ -1,3 +1,7 @@
+/**
+ * All possible requests that can be made to API Gateway
+ */
+
 const BASE_URL = "https://2uk4b5ib89.execute-api.us-east-1.amazonaws.com/dev/";
 
 let getHeaders = token => ({

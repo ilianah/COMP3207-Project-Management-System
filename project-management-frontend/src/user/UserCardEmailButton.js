@@ -2,6 +2,9 @@ import React from "react";
 import { Button, UncontrolledTooltip } from "reactstrap";
 import { FaEnvelope } from "react-icons/fa";
 
+/**
+ * Icon for emailing a user and appropriate actions
+ */
 export default ({ user }) => (
   <a href={"mailto:" + user.email}>
     <Button

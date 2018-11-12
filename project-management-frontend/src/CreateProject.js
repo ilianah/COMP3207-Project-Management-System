@@ -12,6 +12,11 @@ import {
 } from "./util/requests";
 import CreateProjectForm from "./project/CreateProjectForm";
 
+/**
+ * The component is rendered when a user is trying to create or update a project
+ * The state of the component keeps the information about whether the project is being updated or created
+ * and depending on this different subcomponents are rendered
+ */
 export default class CreateProject extends React.Component {
   state = {
     users: [],
@@ -22,6 +27,13 @@ export default class CreateProject extends React.Component {
     status: "New"
   };
 
+  /**
+   * Check if the url contains one of the possible project statuses and set
+   * that status to the project, otherwise, if the page is loaded directly from the url
+   * set the project to the default status - "New"
+   * Check if the url contains a project id and if it does then the user is editing a project so
+   * different components should be rendered.
+   */
   componentDidMount() {
     if (this.props.match.params.status) {
       this.setState({
@@ -37,6 +49,7 @@ export default class CreateProject extends React.Component {
       });
     }
 
+    // Make an API request to get the users that will be displayed as possible assignees and project owners
     getUsers(this.props.token).then(res => {
       this.setState(prevState => {
         let newState = {
@@ -50,6 +63,7 @@ export default class CreateProject extends React.Component {
         return newState;
       });
 
+      // If the project is being updated fetch the information for that project and display it
       if (this.props.match.params.id) {
         getProjects(this.props.token).then(pRes => {
           let project = pRes.find(p => p.id === this.props.match.params.id);
@@ -73,6 +87,9 @@ export default class CreateProject extends React.Component {
     });
   }
 
+  /**
+   * Validate project fields
+   */
   isValidName = name => {
     return name.length > 0 && name.length < 80;
   };
@@ -173,6 +190,9 @@ export default class CreateProject extends React.Component {
     );
   }
 
+  /**
+   * Handlers for project fields input
+   */
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -189,6 +209,10 @@ export default class CreateProject extends React.Component {
     this.setState({ assignees: newValue });
   };
 
+  /**
+   * Validating the create project form; All errors are pushed to the error array and
+   * displayed to the user once the user has clicked the submit button;
+   */
   validateForm = callback => {
     let { name, description, owner } = this.state;
     owner = owner.value;
@@ -216,18 +240,26 @@ export default class CreateProject extends React.Component {
     }
   };
 
+  /**
+   * Send a POST request to the API to create or update the project
+   */
   createProject = () => {
     let { name, description, owner, assignees, status, id } = this.state;
     owner = owner.value;
     assignees = assignees.map(a => a.value);
 
+    // Elements that are the same for both projects; Id is not included since it cannot be updated and is not user generated
     let partialProj = { name, description, status, assignees, owner };
+
+    // Update a project with a specific id if the state of the component corresponds to "Updating"
     this.validateForm(() => {
       if (this.state.isUpdating) {
         updateProject(this.props.token, {
           id,
           ...partialProj
         });
+
+        // Create a new project if the state of the component corresponds to "Not Updating"
       } else {
         createProject(this.props.token, partialProj);
       }

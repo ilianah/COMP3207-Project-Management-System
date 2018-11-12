@@ -14,6 +14,12 @@ import SignUpEmailField from "./auth/signup/SignUpEmailField";
 import SignUpBirthdayField from "./auth/signup/SignUpBirthdayField";
 import VerificationCode from "./VerificationCode";
 
+/**
+ * Custom signup from making use of amazon-cognito-identity-js library to sign up a new user
+ * with specified attributes; The picture attribute is preset to an automatic one that can be later
+ * changed via the MyProfile component; This component's state holds the information about all user attributes
+ * predefined in the Cognito User Pool
+ */
 class SignUp extends React.Component {
   state = {
     signingUp: false,
@@ -27,6 +33,7 @@ class SignUp extends React.Component {
   };
 
   render() {
+    // Buttons
     let SignUpButton = () => (
       <Button
         type="submit"
@@ -119,6 +126,9 @@ class SignUp extends React.Component {
     );
   }
 
+  /**
+   * Handlers for attributes input
+   */
   handleUsernameInput = e => {
     this.setState({ username: e.target.value });
   };
@@ -152,6 +162,7 @@ class SignUp extends React.Component {
     });
   };
 
+  // Use amazon-cognito-identity-js to sign up a new user
   signup = () => {
     const poolData = {
       UserPoolId: "us-east-1_p4KcysLln",
@@ -162,6 +173,7 @@ class SignUp extends React.Component {
 
     let attributeList = [];
 
+    // Access the attributes from the state
     let userBirthdate = {
       Name: "birthdate",
       Value: this.state.birthdate
@@ -182,6 +194,7 @@ class SignUp extends React.Component {
       Value: this.state.email
     };
 
+    // Initiate the Cognito attributes
     let attributeBirthdate = new CognitoUserAttribute(userBirthdate);
     let attributeName = new CognitoUserAttribute(userName);
     let attributePicture = new CognitoUserAttribute(userPicture);
@@ -194,6 +207,7 @@ class SignUp extends React.Component {
 
     this.setState({ signingUp: true });
 
+    // Sing up the new user with the information from the state
     userPool.signUp(
       this.state.username,
       this.state.password,

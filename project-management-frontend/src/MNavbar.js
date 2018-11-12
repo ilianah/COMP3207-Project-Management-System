@@ -13,6 +13,10 @@ import {
 } from "reactstrap";
 import { FaUser } from "react-icons/fa";
 
+/**
+ * The navigation bar component is used in every page
+ * once a user has signed in
+ */
 class MNavbar extends React.Component {
   state = { isOpen: false };
 
@@ -22,6 +26,7 @@ class MNavbar extends React.Component {
     });
   };
 
+  // Use the log out function and get role and username of the currently logged in user from props
   render() {
     const { doLogout, role, username } = this.props;
 

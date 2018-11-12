@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { Button, UncontrolledTooltip } from "reactstrap";
 import { FaEdit } from "react-icons/fa";
 
+/**
+ * Button to edit project with a tooltip - opens CreateProject with state is updating
+ */
 export default ({ project }) => (
   <Link to={`/projects/update/${project.id}`}>
     <Button

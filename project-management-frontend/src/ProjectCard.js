@@ -7,6 +7,9 @@ import ProjectCardDeleteButton from "./project/ProjectCardDeleteButton";
 import ProjectCardEditButton from "./project/ProjectCardEditButton";
 import ProjectCardAccessButton from "./project/ProjectCardAccessButton";
 
+/**
+ * Handle project card dragging to change project status
+ */
 const cardSource = {
   beginDrag(props) {
     return {
@@ -22,16 +25,21 @@ function collect(connect, monitor) {
   };
 }
 
+/**
+ * Deals with displaying a single project on a card and maintains the project data
+ */
 class ProjectCard extends React.Component {
   state = {
     popover: false,
     modal: false
   };
 
+  // Keep track of the popovers
   onPopover = () => {
     this.setState({ popover: !this.state.popover });
   };
 
+  // Keep track of the state of the modal for viewing all information about a project
   onView = () => {
     this.setState({
       modal: !this.state.modal
@@ -47,6 +55,7 @@ class ProjectCard extends React.Component {
       username
     } = this.props;
 
+    // There are only three statuses and each is assigned its own colour
     let statusColors = {
       New: "bg-dark text-white",
       "In Progress": "bg-success text-white",
@@ -55,8 +64,10 @@ class ProjectCard extends React.Component {
 
     let cls = statusColors[project.status];
 
+    // Is the current user an owner or an admin to determine whether they should have access to editin/deleting a project
     let isOwnerOrAdmin = project.owner === username || role.includes("Admin");
 
+    // Is the project owner in the list of users
     let checkUserExists = this.props.users
       ? this.props.users.map(u => u.label).includes(project.owner)
       : true;
@@ -100,14 +111,18 @@ class ProjectCard extends React.Component {
       </div>
     );
   }
+
+  // Go through the list of users and check if the project owner exists (this is to be used when an owner of a project is deleted)
   checkUserExists = project => {
     return this.props.users.map(u => u.label).includes(project.owner);
   };
 
+  // Call the API request to delete a project
   removeProject = () => {
     this.props.deleteProject(this.props.project);
   };
 
+  // Only shown if the current user is not assigned to the project; Opens the mail client with a predefined subject and body
   requestAccess = project => {
     let ownerEmail = (
       this.props.users.filter(u => u.label === project.owner)[0] || {

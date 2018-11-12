@@ -12,6 +12,7 @@ import makeAnimated from "react-select/lib/animated";
 import { Link } from "react-router-dom";
 import Select from "react-select";
 
+// Confirm project creation button
 let ConfirmButton = ({ createProject }) => (
   <Button
     type="submit"
@@ -24,6 +25,7 @@ let ConfirmButton = ({ createProject }) => (
   </Button>
 );
 
+// Cancel project creation button and redirect back to the projects page
 let CancelButton = () => (
   <Link to="/projects">
     <Button type="button" color="danger" size="l" className="mt-3 mb-3 mr-2">
@@ -32,6 +34,10 @@ let CancelButton = () => (
   </Link>
 );
 
+/**
+ * Create project Form with input validation
+ * @param {*} - all the information to fill in and validate the create project form
+ */
 export default function CreateProjectForm({
   name,
   handleChange,

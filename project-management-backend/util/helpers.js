@@ -18,10 +18,12 @@ module.exports.respondWithHeaders = respondWithHeaders;
 
 module.exports.validationError = validationError;
 
+// Returned when a user with a specific role is not authorised to perform certain action
 module.exports.permissionError = () => {
   return respondWithHeaders(401, { message: "Invalid permissions" });
 };
 
+// Validate the project body
 module.exports.validationCheck = body => {
   if (!body.name || body.name.length === 0 || body.name.length > 80)
     return validationError("Project name must be between 1 and 80 characters");
@@ -50,11 +52,14 @@ module.exports.validationCheck = body => {
     return validationError("Invalid assignees");
 };
 
+// Check a user against a specific role
 module.exports.hasRole = async (event, role) => {
-  let res = await cognitoClient.adminListGroupsForUser({
-    UserPoolId: "us-east-1_p4KcysLln",
-    Username: event.requestContext.authorizer.claims["cognito:username"]
-  }).promise();
+  let res = await cognitoClient
+    .adminListGroupsForUser({
+      UserPoolId: "us-east-1_p4KcysLln",
+      Username: event.requestContext.authorizer.claims["cognito:username"]
+    })
+    .promise();
 
   return res.Groups.map(g => g.GroupName).includes(role);
 };
